@@ -13,7 +13,7 @@ contract Wait is ERC20, ERC20Burnable, ReentrancyGuard {
 
 	address manager;
     
-    constructor() ReentrancyGuard() ERC20("Waut", "wait") {
+    constructor() ReentrancyGuard() ERC20("Wait", "wait") {
         manager = msg.sender;
     }
 
