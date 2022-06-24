@@ -1,5 +1,8 @@
-//SPDX-License-Identifier: Unlicensed
-pragma solidity ^0.8.2;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.7;
+
+import '@chainlink/contracts/src/v0.8/ChainlinkClient.sol';
+import '@chainlink/contracts/src/v0.8/ConfirmedOwner.sol';
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -18,85 +21,200 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 //50% to us and 50% to users who did claim
 //Midnight bonus
 
-contract Wait is ERC20, ERC20Burnable, Ownable {
+contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
+    using Chainlink for Chainlink.Request;
 
     address manager;
-    uint256 public totalPeople = 3;
-    uint256 public mintedPeople;
-    uint256 public unclaimedWait;
+    uint256 public totalSacs = 2;
     bool public minting = true;
-    mapping (address => bool) public addList;
-    mapping (address => bool) public phiatInData;
-    mapping (address => bool) public phiatIsClaimable;
+    uint public checkDB=0;
+    uint public fulf=0;
+
+    string public yes1;
+    bytes32 private jobId;
+
+    mapping (uint => mapping(address => bool)) public InData;
+    mapping (uint => mapping(address => bool)) public Claimed;
+    mapping(uint => address) public addy_bridge;
+    mapping(uint => uint) public sac_bridge;
+    mapping(uint => uint) public totalPeople;
+    mapping(uint => uint) public mintedPeople;
+    mapping(uint => uint) public unclaimedWait;
+    mapping(uint => uint) public sacTimes;
     
-    constructor() ERC20("Wait", "WAIT") {
+    constructor() ERC20("Wait", "WAIT") ConfirmedOwner(msg.sender){
         manager = msg.sender;
-        addList[msg.sender] = true;
+        totalPeople[0] = 3;
+        totalPeople[1] = 3;
+        sacTimes[0] = 1654578000;
+        sacTimes[1] = 1654578000;
+        setChainlinkToken(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
+        setChainlinkOracle(0x28E27a26a6Dd07a21c3aEfE6785A1420b789b53C);
+        jobId = '30146dbaf8424887bf978fe3057b5352';
     }
 
+
+
+    event RequestVolume(bytes32 indexed requestId, uint256 volume);
+
     modifier manager_function(){
-    require(msg.sender==manager,"Only the manager can call this function");
+        require(msg.sender==manager,"Only the manager can call this function");
     _;}
 
     modifier minting_on(){
-    require(minting == true,"Wait cannot be minted anymore");
+        require(minting == true,"Minting Wait has been turned off, go claim the unclaimed Wait");
     _;}
 
-    // DEV FUNCTIONS
+    /**
+     * Create a Chainlink request to retrieve API response, find the target
+     * data, then multiply by 1000000000000000000 (to remove decimal places from data).
+     */
+    function checkDatabase(string memory _address, uint _index) public returns (bytes32 requestId) {
 
-    //number of decimals for TIDE, same as HEX
+        require(!InData[_index][msg.sender],"You're already in the database");
+        
+        Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
+        
+        
+        addy_bridge[checkDB] = msg.sender;
+        sac_bridge[checkDB] = _index;
+
+        checkDB++;
+
+        // TODO: Add the identifier for which sac
+
+        req.add('address', _address); // Chainlink nodes 1.0.0 and later support this format
+
+
+        // Sends the request, '0' just means it costs 0 link
+        sendOperatorRequest(req, 0);
+    }
+
+    /**
+     * Receive the response in the form of uint256
+     */
+    function fulfill(bytes32 _requestId, bool _inData) public recordChainlinkFulfillment(_requestId) {
+
+        InData[sac_bridge[fulf]][addy_bridge[fulf]]=_inData;
+        fulf++;
+    }
+
+
+
     function decimals() public pure override returns (uint8) {
         return 8;
     }
 
-    function checkDatabase() public minting_on {
-        if (addList[msg.sender]){
-            phiatInData[msg.sender] = true;
-        }
-    }
+ 
 
-    function mintablePhiatWait() public view minting_on returns(uint){
+    function mintableWait(uint sac) public view minting_on returns(uint){
 
-        require(phiatInData[msg.sender] == true, "You were not in the sacrifice or you need to check!");
-        require(phiatIsClaimable[msg.sender] == false, "You already minted your wait!");
+        require(sac < totalSacs, "Not an accurate sacrifice");
+        require(InData[sac][msg.sender] == true, "You were not in the specific sacrifice or you need to check!");
+        require(Claimed[sac][msg.sender] == false, "You already minted your wait for this sacrifice!");
         
-        uint currentTime = block.timestamp;
-        uint mintableWait = (currentTime - 1654578000) / 3600;
-
-        return mintableWait;
+        return (block.timestamp - sacTimes[sac]) / 3600;
 
     }
     
-    function mintPhiatWait() public minting_on {
+    function mintWait(uint sac) public minting_on {
 
-        require(phiatIsClaimable[msg.sender] == false, "You already minted your wait from the Phiat sacrifice!");
-        require(phiatInData[msg.sender] == true, "You were not in the Phiat sacrifice or you haven't checked the database yet!");
+        require(sac < totalSacs, "Not an accurate sacrifice");
+        require(Claimed[sac][msg.sender] == false, "You already minted your wait for this sacrifice!");
+        require(InData[sac][msg.sender] == true, "You were not in this sacrifice or you haven't checked the database yet!");
 
-        phiatIsClaimable[msg.sender] = true;
-        mintedPeople++;
+        Claimed[sac][msg.sender] = true;
+        mintedPeople[sac]++;
 
-        uint currentTime = block.timestamp;
-        uint mintableWait = (currentTime - 1654578000) / 3600;
-        _mint(msg.sender, mintableWait);
+        uint mintableWait1 = (block.timestamp - sacTimes[sac]) / 3600;
+        _mint(msg.sender, mintableWait1 *10**8);
 
     }
 
-    function mintOff() public manager_function minting_on{
+    function mintableAllWait() public view minting_on returns (uint mintableWait1) {
+
+        for(uint i; i < totalSacs; i++) {
+            if(!Claimed[i][msg.sender] && InData[i][msg.sender]) {
+                mintableWait1 += (block.timestamp - sacTimes[i]) / 3600;
+            }
+        }
+
+    }
+    
+    function mintAllWait() public minting_on {
+
+        uint mintableWait1 = 0;
+
+        for(uint i; i < totalSacs; i++) {
+            if(!Claimed[i][msg.sender] && InData[i][msg.sender]) {
+                Claimed[i][msg.sender] = true;
+                mintedPeople[i]++;
+                mintableWait1 += (block.timestamp - sacTimes[i]) / 3600;
+            }
+        }
+
+        _mint(msg.sender, mintableWait1);
+        
+    }
+
+    function mintOff() public manager_function minting_on {
+
         minting = false;
-        unclaimedWait = (totalPeople - mintedPeople) * ((block.timestamp - 1654578000) / 3600) / 2;
-        _mint(address(0xeC8d1d1E1bfDB23403B7d5816BE0D43A21Db8C6E), unclaimedWait);
+        uint waitAmount;
+
+        for(uint i; i < totalSacs; i++) {
+            unclaimedWait[i] = (totalPeople[i] - mintedPeople[i]) * ((block.timestamp - sacTimes[i]) / 3600) / 2;
+            waitAmount += unclaimedWait[i];
+        }
+
+        _mint(address(0xeC8d1d1E1bfDB23403B7d5816BE0D43A21Db8C6E), waitAmount);
     }
 
-    function mintUnclaimedWait() public {
+    function mintableUnclaimedWait(uint sac) public view returns (uint waitAmount) {
+        require(!minting, "Minting is still on");
+        require(Claimed[sac][msg.sender], "You never claimed your wait or already claimed the unclaimed wait");
+
+        waitAmount = unclaimedWait[sac] / mintedPeople[sac];
+    }
+    
+    function mintUnclaimedWait(uint sac) public {
 
         require(!minting, "Minting is still on");
-        require(phiatIsClaimable[msg.sender], "You never claimed your wait or already claimed the unclaimed wait");
+        require(Claimed[sac][msg.sender], "You never claimed your wait or already claimed the unclaimed wait");
 
-        phiatIsClaimable[msg.sender] = false;
-        uint waitAmount = unclaimedWait/mintedPeople;
-
+        Claimed[sac][msg.sender] = false;
+        uint waitAmount;
+        waitAmount = unclaimedWait[sac] / mintedPeople[sac];
         _mint(msg.sender, waitAmount);
         
+    }
+
+    function mintableAllUnclaimedWait() public view returns(uint waitAmount) {
+
+        require(!minting, "Minting is still on");
+
+        for(uint i; i < totalSacs; i++) {
+            if(Claimed[i][msg.sender]) {
+                waitAmount += unclaimedWait[i] / mintedPeople[i];
+            }
+        }
+
+    }
+    
+    function mintAllUnclaimedWait() public {
+
+        require(!minting, "Minting is still on");
+
+        uint waitAmount = 0;
+        for(uint i; i < totalSacs; i++) {
+            
+            if(Claimed[i][msg.sender]) {
+                Claimed[i][msg.sender] = false;
+                waitAmount += unclaimedWait[i] / mintedPeople[i];
+            }
+        }
+
+        _mint(msg.sender, waitAmount);
     }
 
     function returnCurrentTime() public view returns(uint) {

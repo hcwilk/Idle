@@ -1,34 +1,42 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
 import { useEffect } from 'react'
-import * as IPFS from 'ipfs-core'
+import { app, db } from '../firebaseConfig'
+import { collection, addDoc, getDocs } from "firebase/firestore"; 
+
 export default function Home() {
 
+	async function addData(){
+		console.log("what")
+		try {
+			const docRef = await addDoc(collection(db, "Addresses"), {
+			  first: "Ada",
+			  last: "Lovelace",
+			  born: 1815
+			});
+			console.log("Document written with ID: ", docRef.id);
+		  } catch (e) {
+			console.error("Error adding document: ", e);
+		  }
+	}
+
+	async function readData() {
+		const querySnapshot = await getDocs(collection(db, "users"));
+		querySnapshot.forEach((doc) => {
+		  console.log(`${doc.id} => ${doc.data()}`);
+		});
+	}
 
 	useEffect(() => {
 		console.log("hitting?")
+		// init()
 	},[])
 
-	async function init(){
-		const node = await IPFS.create()
-
-		const stream = node.cat('QmZA3v4QLbbCuivR3mTfgCiLEBRNhpPbu2NVemxiFzXwYF')
-		const decoder = new TextDecoder()
-		let data = ''
-
-		for await (const chunk of stream) {
-		// chunks of data are returned as a Uint8Array, convert it back to a string
-		data += decoder.decode(chunk, { stream: true })
-		}	
-
-		console.log(data)
-	}
+	
 
   return (
     <div >
     	<h1 className='text-center'>If you really break it down to it's components</h1>
-		<button onClick={init}>bro just once</button>
+		<button onClick={addData}>bro just once</button>
+		<button onClick={readData}>maybe</button>
     </div>
   )
 }
