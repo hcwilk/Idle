@@ -1,6 +1,5 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
-
+//SPDX-License-Identifier: MIT
+pragma solidity ^0.8.2;
 import '@chainlink/contracts/src/v0.8/ChainlinkClient.sol';
 import '@chainlink/contracts/src/v0.8/ConfirmedOwner.sol';
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -32,11 +31,12 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
 
     string public yes1;
     bytes32 private jobId;
-
-    mapping (uint => mapping(address => bool)) public InData;
-    mapping (uint => mapping(address => bool)) public Claimed;
     mapping(uint => address) public addy_bridge;
     mapping(uint => uint) public sac_bridge;
+    mapping (uint => mapping(address => bool)) public InData;
+    mapping (uint => mapping(address => bool)) public Claimed;
+    mapping (uint => mapping(address => uint)) public ClaimedAmount;
+    mapping(uint => uint) public totalWait;
     mapping(uint => uint) public totalPeople;
     mapping(uint => uint) public mintedPeople;
     mapping(uint => uint) public unclaimedWait;
@@ -44,31 +44,35 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
     
     constructor() ERC20("Wait", "WAIT") ConfirmedOwner(msg.sender){
         manager = msg.sender;
-        totalPeople[0] = 3;
-        totalPeople[1] = 3;
+        totalPeople[0] = 45110; //Pulse
+        totalPeople[1] = 93920; //PulseX
+        totalPeople[2] = 5720; //Liquid Loans
+        totalPeople[3] = 1212; //Mintra
+        totalPeople[4] = 644; //Genius
+        totalPeople[5] = 145; //Hurricash
+        totalPeople[6] = 649; //Phiat
+        totalPeople[7] = 860; //Internet Money Dividend
+
         sacTimes[0] = 1654578000;
         sacTimes[1] = 1654578000;
+
         setChainlinkToken(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
         setChainlinkOracle(0x28E27a26a6Dd07a21c3aEfE6785A1420b789b53C);
         jobId = '30146dbaf8424887bf978fe3057b5352';
     }
 
-
-
-    event RequestVolume(bytes32 indexed requestId, uint256 volume);
-
     modifier manager_function(){
-        require(msg.sender==manager,"Only the manager can call this function");
+    require(msg.sender==manager,"Only the manager can call this function");
     _;}
 
     modifier minting_on(){
-        require(minting == true,"Minting Wait has been turned off, go claim the unclaimed Wait");
+    require(minting == true,"Minting Wait has been turned off, go claim the unclaimed Wait");
     _;}
 
-    /**
-     * Create a Chainlink request to retrieve API response, find the target
-     * data, then multiply by 1000000000000000000 (to remove decimal places from data).
-     */
+    function decimals() public pure override returns (uint8) {
+        return 8;
+    }
+
     function checkDatabase(string memory _address, uint _index) public returns (bytes32 requestId) {
 
         require(!InData[_index][msg.sender],"You're already in the database");
@@ -90,22 +94,11 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
         sendOperatorRequest(req, 0);
     }
 
-    /**
-     * Receive the response in the form of uint256
-     */
     function fulfill(bytes32 _requestId, bool _inData) public recordChainlinkFulfillment(_requestId) {
 
         InData[sac_bridge[fulf]][addy_bridge[fulf]]=_inData;
         fulf++;
     }
-
-
-
-    function decimals() public pure override returns (uint8) {
-        return 8;
-    }
-
- 
 
     function mintableWait(uint sac) public view minting_on returns(uint){
 
@@ -127,7 +120,9 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
         mintedPeople[sac]++;
 
         uint mintableWait1 = (block.timestamp - sacTimes[sac]) / 3600;
-        _mint(msg.sender, mintableWait1 *10**8);
+        ClaimedAmount[sac][msg.sender] = mintableWait1;
+        totalWait[sac] += mintableWait1;
+        _mint(msg.sender, mintableWait1);
 
     }
 
@@ -149,7 +144,9 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
             if(!Claimed[i][msg.sender] && InData[i][msg.sender]) {
                 Claimed[i][msg.sender] = true;
                 mintedPeople[i]++;
-                mintableWait1 += (block.timestamp - sacTimes[i]) / 3600;
+                ClaimedAmount[i][msg.sender] = (block.timestamp - sacTimes[i]) / 3600;
+                totalWait[i] += ClaimedAmount[i][msg.sender];
+                mintableWait1 += ClaimedAmount[i][msg.sender];
             }
         }
 
@@ -171,10 +168,12 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
     }
 
     function mintableUnclaimedWait(uint sac) public view returns (uint waitAmount) {
+
         require(!minting, "Minting is still on");
         require(Claimed[sac][msg.sender], "You never claimed your wait or already claimed the unclaimed wait");
 
-        waitAmount = unclaimedWait[sac] / mintedPeople[sac];
+        waitAmount = unclaimedWait[sac] * ClaimedAmount[sac][msg.sender] / totalWait[sac];
+
     }
     
     function mintUnclaimedWait(uint sac) public {
@@ -184,7 +183,7 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
 
         Claimed[sac][msg.sender] = false;
         uint waitAmount;
-        waitAmount = unclaimedWait[sac] / mintedPeople[sac];
+        waitAmount = unclaimedWait[sac] * ClaimedAmount[sac][msg.sender] / totalWait[sac];
         _mint(msg.sender, waitAmount);
         
     }
@@ -195,7 +194,7 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
 
         for(uint i; i < totalSacs; i++) {
             if(Claimed[i][msg.sender]) {
-                waitAmount += unclaimedWait[i] / mintedPeople[i];
+                waitAmount += unclaimedWait[i] * ClaimedAmount[i][msg.sender] / totalWait[i];
             }
         }
 
@@ -210,7 +209,7 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
             
             if(Claimed[i][msg.sender]) {
                 Claimed[i][msg.sender] = false;
-                waitAmount += unclaimedWait[i] / mintedPeople[i];
+                waitAmount += unclaimedWait[i] * ClaimedAmount[i][msg.sender] / totalWait[i];
             }
         }
 
