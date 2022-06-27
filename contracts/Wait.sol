@@ -28,9 +28,10 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
     bool public minting = true;
     uint public checkDB=0;
     uint public fulf=0;
-
     string public yes1;
     bytes32 private jobId;
+
+	
     mapping(uint => address) public addy_bridge;
     mapping(uint => uint) public sac_bridge;
     mapping (uint => mapping(address => bool)) public InData;
