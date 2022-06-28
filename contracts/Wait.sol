@@ -28,6 +28,8 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
     uint public fulf=0;
     string public yes1;
     bytes32 private jobId;
+    address public checking;
+    uint public checking1;
 
 	
     mapping(uint => address) public addy_bridge;
@@ -63,7 +65,7 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
 
         setChainlinkToken(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
         setChainlinkOracle(0x28E27a26a6Dd07a21c3aEfE6785A1420b789b53C);
-        jobId = '30146dbaf8424887bf978fe3057b5354';
+        jobId = '233eae6ef5c34ad2a0fe2eaed75b5f44';
     }
 
     modifier manager_function(){
@@ -75,7 +77,7 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
     _;}
 
     function decimals() public pure override returns (uint8) {
-        return 8;
+        return 0;
     }
 
     function checkDatabase(string memory _address) public returns (bytes32 requestId) {
@@ -83,63 +85,54 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
         Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
         
         
-        addy_bridge[checkDB] = msg.sender;
-
-        checkDB++;
 
         req.add('address', _address); 
+
+        req.add('path',"bro");
+        req.add('path1',"man");
 
 
         // Sends the request, '0' just means it costs 0 link
         sendOperatorRequest(req, 0);
     }
 
-    function fulfill(bytes32 _requestId, uint binary) public recordChainlinkFulfillment(_requestId) {
+    function fulfill(bytes32 _requestId, address user, uint binary) public recordChainlinkFulfillment(_requestId) {
         uint yes = binary;
         if(yes>=128){
-            InData[7][addy_bridge[fulf]]=true;
+            InData[7][user]=true;
             yes-=128;
         }
         if(yes>=64){
-            InData[6][addy_bridge[fulf]]=true;
+            InData[6][user]=true;
             yes-=64;
         }
         if(yes>=32){
-            InData[5][addy_bridge[fulf]]=true;
+            InData[5][user]=true;
             yes-=32;
         }
         if(yes>=16){
-            InData[4][addy_bridge[fulf]]=true;
+            InData[4][user]=true;
             yes-=16;
         }
         if(yes>=8){
-            InData[3][addy_bridge[fulf]]=true;
+            InData[3][user]=true;
             yes-=8;
         }
         if(yes>=4){
-            InData[2][addy_bridge[fulf]]=true;
+            InData[2][user]=true;
             yes-=4;
         }
         if(yes>=2){
-            InData[1][addy_bridge[fulf]]=true;
+            InData[1][user]=true;
             yes-=2;
         }
         if(yes>=1){
-            InData[0][addy_bridge[fulf]]=true;
+            InData[0][user]=true;
             yes-=1;
         }
         require(yes==0,"Something went wrong here");
-        fulf++;
     }
 
-    function inDataBase(uint sac) public view returns (bool) {
-        return InData[sac][msg.sender];
-    }
-
-    function haveClaimed(uint sac) public view returns (bool) {
-        return Claimed[sac][msg.sender];
-    }
-    
     function mintableWait(uint sac) public view minting_on returns(uint){
 
         require(sac < totalSacs, "Not an accurate sacrifice");
