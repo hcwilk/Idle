@@ -1,10 +1,8 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.2;
+pragma solidity ^0.8.0;
 import '@chainlink/contracts/src/v0.8/ChainlinkClient.sol';
 import '@chainlink/contracts/src/v0.8/ConfirmedOwner.sol';
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
 //236,389 addresses (not excluding non-ethereum wallets)
@@ -59,7 +57,7 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
 
         setChainlinkToken(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
         setChainlinkOracle(0x28E27a26a6Dd07a21c3aEfE6785A1420b789b53C);
-        jobId = '30146dbaf8424887bf978fe3057b5352';
+        jobId = '30146dbaf8424887bf978fe3057b5354';
     }
 
     modifier manager_function(){
@@ -74,30 +72,57 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
         return 8;
     }
 
-    function checkDatabase(string memory _address, uint _index) public returns (bytes32 requestId) {
-
-        require(!InData[_index][msg.sender],"You're already in the database");
+    function checkDatabase(string memory _address) public returns (bytes32 requestId) {
         
         Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
         
         
         addy_bridge[checkDB] = msg.sender;
-        sac_bridge[checkDB] = _index;
 
         checkDB++;
 
-        // TODO: Add the identifier for which sac
-
-        req.add('address', _address); // Chainlink nodes 1.0.0 and later support this format
+        req.add('address', _address); 
 
 
         // Sends the request, '0' just means it costs 0 link
         sendOperatorRequest(req, 0);
     }
 
-    function fulfill(bytes32 _requestId, bool _inData) public recordChainlinkFulfillment(_requestId) {
-
-        InData[sac_bridge[fulf]][addy_bridge[fulf]]=_inData;
+    function fulfill(bytes32 _requestId, uint binary) public recordChainlinkFulfillment(_requestId) {
+        uint yes = binary;
+        if(yes>=128){
+            InData[7][addy_bridge[fulf]]=true;
+            yes-=128;
+        }
+        if(yes>=64){
+            InData[6][addy_bridge[fulf]]=true;
+            yes-=64;
+        }
+        if(yes>=32){
+            InData[5][addy_bridge[fulf]]=true;
+            yes-=32;
+        }
+        if(yes>=16){
+            InData[4][addy_bridge[fulf]]=true;
+            yes-=16;
+        }
+        if(yes>=8){
+            InData[3][addy_bridge[fulf]]=true;
+            yes-=8;
+        }
+        if(yes>=4){
+            InData[2][addy_bridge[fulf]]=true;
+            yes-=4;
+        }
+        if(yes>=2){
+            InData[1][addy_bridge[fulf]]=true;
+            yes-=2;
+        }
+        if(yes>=1){
+            InData[0][addy_bridge[fulf]]=true;
+            yes-=1;
+        }
+        require(yes==0,"Something went wrong here");
         fulf++;
     }
 
