@@ -98,6 +98,8 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
 
     function fulfill(bytes32 _requestId, address user, uint binary) public recordChainlinkFulfillment(_requestId) {
         uint yes = binary;
+		checking = user;
+		checking1 = binary;
         if(yes>=128){
             InData[7][user]=true;
             yes-=128;
