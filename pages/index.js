@@ -122,9 +122,37 @@ export default function Home() {
   return (
     <>
 		<div className="h-full flex justify-center">
-			{loadingState!=='not-loaded' ?
+			{loadingState=='not-loaded' ?
 			(
 				<>
+				<div>
+					<div className='w-full bg-[#00e7fa] flex flex-col relative justify-center items-center lg:flex-row gap-5'>
+						<a className=" text-[#252e3f] text-4xl font-sans font-bold mx-20 my-6">Claim Your Free $WAIT</a>
+					</div>
+					<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
+						<a className=" text-black text-center text-4xl font-sans font-thin mx-16 my-6">If you participated in any of the below sacrifices, you are eligible to claim free $WAIT tokens. You can claim by project or all at once.</a>
+					</div>
+					<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
+						<button className='w-5/12 h-20 text-xl text-white text-center bg-[#324dff] border-4 border-black my-5'>Claim All $WAIT</button>
+					</div>
+
+						<div className='w-full flex flex-col md:flex-row bg-white justify-center pt-6'>
+							<div>
+								<div className='h-36 w-36 ml-5'>
+									<img src='pulse.png'></img>
+								</div>
+								<a className=" text-black text-center text-4xl font-sans font-thin mx-16 my-6">Pulse</a>
+							</div>
+							<div>
+								<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
+									<a className=" text-black text-center text-xl font-sans mx-16 my-6">If you participated in any of the below sacrifices, you are eligible to claim free $WAIT tokens. You can claim by project or all at once.</a>
+								</div>
+
+							</div>
+						</div>
+					
+					
+				</div>
 				
 				</>
 			):(
