@@ -52,8 +52,14 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
         totalPeople[6] = 649; //Phiat
         totalPeople[7] = 860; //Internet Money Dividend
 
-        sacTimes[0] = 1654578000;
-        sacTimes[1] = 1654578000;
+        sacTimes[0] = 1627948800; //Pulse
+        sacTimes[1] = 1645660800; //PulseX
+        sacTimes[2] = 1647907200; //Liquid Loans
+        sacTimes[3] = 1646179200; //Mintra
+        sacTimes[4] = 1654041600; //Genius
+        sacTimes[5] = 1646092800; //Hurricash
+        sacTimes[6] = 1654387200; //Phiat
+        sacTimes[7] = 1647734400; //Internet Money Dividend
 
         setChainlinkToken(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
         setChainlinkOracle(0x28E27a26a6Dd07a21c3aEfE6785A1420b789b53C);
