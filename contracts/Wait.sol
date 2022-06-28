@@ -22,7 +22,7 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
     using Chainlink for Chainlink.Request;
 
     address manager;
-    uint256 public totalSacs = 2;
+    uint256 public totalSacs = 8;
     bool public minting = true;
     uint public checkDB=0;
     uint public fulf=0;
