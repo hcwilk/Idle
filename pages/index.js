@@ -1,10 +1,97 @@
-import { useEffect } from 'react'
-import { app, db } from '../firebaseConfig'
-import { collection, addDoc, getDocs } from "firebase/firestore"; 
+//import { app, db } from '../firebaseConfig'
+//import { collection, addDoc, getDocs } from "firebase/firestore"; 
+import React, {useEffect, useState} from 'react'
+import Web3Modal from 'web3modal'
+import {Contract, ethers} from 'ethers';
+//import Modal from './Components/modal'
+//import {Chart, ArcElement} from 'chart.js'
+
 
 export default function Home() {
 
-	async function addData(){
+	const [loadingState, setLoadingState] = useState('not-loaded');
+
+	const [PulseC, setPulseC] = useState(false);
+	const [PulseXC, setPulseXC] = useState(false);
+	const [LiquidLoansC, setLiquidLoansC] = useState(false);
+	const [MintraC, setMintraC] = useState(false);
+	const [GeniusC, setGeniusC] = useState(false);
+	const [HurricashC, setHurricashC] = useState(false);
+	const [PhiatC, setPhiatC] = useState(false);
+	const [IMDC, setIMDC] = useState(false);
+	const [PulseD, setPulseD] = useState(false);
+	const [PulseXD, setPulseXD] = useState(false);
+	const [LiquidLoansD, setLiquidLoansD] = useState(false);
+	const [MintraD, setMintraD] = useState(false);
+	const [GeniusD, setGeniusD] = useState(false);
+	const [HurricashD, setHurricashD] = useState(false);
+	const [PhiatD, setPhiatD] = useState(false);
+	const [IMDD, setIMDD] = useState(false);
+
+
+	useEffect(()=>{
+		init();
+		window.ethereum.on('accountsChanged', function (accounts) {
+			reload()
+		  })
+	}, []);
+
+	async function init(){
+
+		try{
+
+			const web3Modal = new Web3Modal()
+			const connection = await web3Modal.connect()
+			const provider = new ethers.providers.Web3Provider(connection);
+			const signer = provider.getSigner();
+			const WaitContract = new ethers.Contract(WaitAddress, Wait.abi, signer);
+
+
+			const pulseC = await WaitContract.haveClaimed(0);
+			const pulseXC = await WaitContract.haveClaimed(1);
+			const liquidLoansC = await WaitContract.haveClaimed(2);
+			const mintraC = await WaitContract.haveClaimed(3);
+			const geniusC = await WaitContract.haveClaimed(4);
+			const hurricashC = await WaitContract.haveClaimed(5);
+			const phiatC = await WaitContract.haveClaimed(6);
+			const iMDC = await WaitContract.haveClaimed(7);
+			
+			const pulseD = await WaitContract.inDataBase(0);
+			const pulseXD = await WaitContract.inDataBase(1);
+			const liquidLoansD = await WaitContract.inDataBase(2);
+			const mintraD = await WaitContract.inDataBase(3);
+			const geniusD = await WaitContract.inDataBase(4);
+			const hurricashD = await WaitContract.inDataBase(5);
+			const phiatD = await WaitContract.inDataBase(6);
+			const iMDD = await WaitContract.inDataBase(7);
+
+			setPulseC(pulseC);
+			setPulseXC(pulseXC);
+			setLiquidLoansC(liquidLoansC);
+			setMintraC(mintraC);
+			setGeniusC(geniusC);
+			setHurricashC(hurricashC);
+			setPhiatC(phiatC);
+			setIMDC(iMDC);
+
+			setPulseD(pulseD);
+			setPulseXD(pulseXD);
+			setLiquidLoansD(liquidLoansD);
+			setMintraD(mintraD);
+			setGeniusD(geniusD);
+			setHurricashD(hurricashD);
+			setPhiatD(phiatD);
+			setIMDD(iMDD);
+			
+		
+			setLoadingState("loaded")
+		}
+		catch(error){
+			console.log(error)
+		}
+	}
+	
+	/*async function addData(){
 		console.log("what")
 		try {
 			const docRef = await addDoc(collection(db, "Addresses"), {
@@ -23,7 +110,7 @@ export default function Home() {
 		querySnapshot.forEach((doc) => {
 		  console.log(`${doc.id} => ${doc.data()}`);
 		});
-	}
+	}*/
 
 	useEffect(() => {
 		console.log("hitting?")
@@ -33,10 +120,19 @@ export default function Home() {
 	
 
   return (
-    <div >
-    	<h1 className='text-center'>If you really break it down to it's components</h1>
-		<button onClick={addData}>bro just once</button>
-		<button onClick={readData}>maybe</button>
-    </div>
+    <>
+		<div className="h-full flex justify-center">
+			{loadingState!=='not-loaded' ?
+			(
+				<>
+				
+				</>
+			):(
+				<p>
+					Not Loading
+				</p>
+			)}
+		</div>
+	</>
   )
 }

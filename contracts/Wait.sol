@@ -132,6 +132,14 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
         fulf++;
     }
 
+    function inDataBase(uint sac) public view returns (bool) {
+        return InData[sac][msg.sender];
+    }
+
+    function haveClaimed(uint sac) public view returns (bool) {
+        return Claimed[sac][msg.sender];
+    }
+    
     function mintableWait(uint sac) public view minting_on returns(uint){
 
         require(sac < totalSacs, "Not an accurate sacrifice");
