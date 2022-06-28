@@ -1,4 +1,5 @@
 require("@nomiclabs/hardhat-waffle");
+require("@nomiclabs/hardhat-etherscan")
 const fs = require("fs")
 const privateKey = fs.readFileSync(".secret").toString()
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -31,8 +32,15 @@ module.exports = {
 	kovan:{
 		url:'https://kovan.infura.io/v3/d06042096f7a48b9949608c385bc8ba7',
 		accounts: [privateKey]
+	},
+	rinkeby:{
+		url:`https://rinkeby.infura.io/v3/7fc3dd2a897d4441b5efd32fd756bb0e`,
+		accounts: [privateKey]
 
 	}
   },
   solidity: "0.8.4",
+  etherscan: {
+	apiKey: "VWUS3IZWEWXR3F1RHU6D4I11TAXMWFZPGA"
+  }
 };

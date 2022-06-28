@@ -14,7 +14,7 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Tide = await hre.ethers.getContractFactory("Tide");
+  const Tide = await hre.ethers.getContractFactory("Wait");
   const tide = await Tide.deploy();
 
   await tide.deployed();

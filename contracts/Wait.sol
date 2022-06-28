@@ -24,17 +24,10 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
     address manager;
     uint256 public totalSacs = 8;
     bool public minting = true;
-    uint public checkDB=0;
-    uint public fulf=0;
-    string public yes1;
     bytes32 private jobId;
-    address public checking;
-    uint public checking1;
 
-	
-    mapping(uint => address) public addy_bridge;
-    mapping(uint => uint) public sac_bridge;
-    mapping (uint => mapping(address => bool)) public InData;
+
+	mapping (uint => mapping(address => bool)) public InData;
     mapping (uint => mapping(address => bool)) public Claimed;
     mapping (uint => mapping(address => uint)) public ClaimedAmount;
     mapping(uint => uint) public totalWait;
@@ -69,11 +62,11 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
     }
 
     modifier manager_function(){
-    require(msg.sender==manager,"Only the manager can call this function");
+        require(msg.sender==manager,"Only the manager can call this function");
     _;}
 
     modifier minting_on(){
-    require(minting == true,"Minting Wait has been turned off, go claim the unclaimed Wait");
+        require(minting == true,"Minting Wait has been turned off, go claim the unclaimed Wait");
     _;}
 
     function decimals() public pure override returns (uint8) {
@@ -83,23 +76,16 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
     function checkDatabase(string memory _address) public returns (bytes32 requestId) {
         
         Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
-        
-        
-
-        req.add('address', _address); 
-
+       
+	    req.add('address', _address); 
         req.add('path',"bro");
         req.add('path1',"man");
 
-
-        // Sends the request, '0' just means it costs 0 link
         sendOperatorRequest(req, 0);
     }
 
     function fulfill(bytes32 _requestId, address user, uint binary) public recordChainlinkFulfillment(_requestId) {
         uint yes = binary;
-		checking = user;
-		checking1 = binary;
         if(yes>=128){
             InData[7][user]=true;
             yes-=128;
