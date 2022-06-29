@@ -136,13 +136,14 @@ export default function Home() {
 						<button className='w-5/12 h-20 text-xl text-white text-center bg-[#324dff] border-4 border-black my-5'>Claim All $WAIT</button>
 					</div>
 
-						<div className='w-full flex flex-col md:flex-row bg-white items-center pt-6'>
+						<div className='w-full flex flex-col md:flex-row bg-white items-center justify-center pt-6'>
 							<div>
 								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
 									<img src='pulse.png'></img>
 								</div>
-								<a className="w-screen text-black text-center text-4xl font-sans font-thin my-6 justify-center">Pulse</a>
-								
+								<div className='w-full flex justify-center'>
+									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">Pulse</a>
+								</div>								
 							</div>
 							<div>
 								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
@@ -160,8 +161,9 @@ export default function Home() {
 								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
 									<img src='pulsex.png'></img>
 								</div>
-								<a className="w-screen text-black text-center text-4xl font-sans font-thin my-6 justify-center">PulseX</a>
-								
+								<div className='w-full flex justify-center'>
+									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">PulseX</a>
+								</div>								
 							</div>
 							<div>
 								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
@@ -179,8 +181,9 @@ export default function Home() {
 								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
 									<img src='liquidloans.png'></img>
 								</div>
-								<a className="w-screen text-black text-center text-4xl font-sans font-thin my-6 justify-center">Liquid Loans</a>
-								
+								<div className='w-full flex justify-center'>
+									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">Liquid Loans</a>
+								</div>								
 							</div>
 							<div>
 								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
@@ -199,8 +202,9 @@ export default function Home() {
 								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
 									<img src='hurricash.png'></img>
 								</div>
-								<a className="w-screen text-black text-center text-4xl font-sans font-thin my-6 justify-center">Hurricash</a>
-								
+								<div className='w-full flex justify-center'>
+									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">Hurricash</a>
+								</div>
 							</div>
 							<div>
 								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
@@ -219,8 +223,9 @@ export default function Home() {
 								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
 									<img src='genius.png'></img>
 								</div>
-								<a className="w-screen text-black text-center text-4xl font-sans font-thin my-6 justify-center">Genius</a>
-								
+								<div className='w-full flex justify-center'>
+									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">Genius</a>
+								</div>								
 							</div>
 							<div>
 								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
@@ -239,8 +244,9 @@ export default function Home() {
 								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
 									<img src='mintra.png'></img>
 								</div>
-								<a className="w-screen text-black text-center text-4xl font-sans font-thin my-6 justify-center">Mintra</a>
-								
+								<div className='w-full flex justify-center'>
+									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">Mintra</a>
+								</div>								
 							</div>
 							<div>
 								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
@@ -259,8 +265,9 @@ export default function Home() {
 								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
 									<img src='phiat.png'></img>
 								</div>
-								<a className="w-screen text-black text-center text-4xl font-sans font-thin my-6 justify-center">Phiat</a>
-								
+								<div className='w-full flex justify-center'>
+									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">Phiat</a>
+								</div>								
 							</div>
 							<div>
 								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
@@ -279,8 +286,9 @@ export default function Home() {
 								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
 									<img src='imd.png'></img>
 								</div>
-								<a className="w-screen text-black text-center text-4xl font-sans font-thin my-6 justify-center">I.M.D</a>
-								
+								<div className='w-full flex justify-center'>
+									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">I.M.D</a>
+								</div>								
 							</div>
 							<div>
 								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
