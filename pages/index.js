@@ -11,6 +11,9 @@ export default function Home() {
 
 	const [loadingState, setLoadingState] = useState('not-loaded');
 
+	const [sacs,setSacs] = useState([])
+
+
 	const [PulseC, setPulseC] = useState(false);
 	const [PulseXC, setPulseXC] = useState(false);
 	const [LiquidLoansC, setLiquidLoansC] = useState(false);
@@ -89,6 +92,49 @@ export default function Home() {
 		catch(error){
 			console.log(error)
 		}
+
+		setSacs([{
+			name: "Pulse",
+			image: "pulse.png",
+			in: false
+		},
+		{
+			name: "PulseX",
+			image: "pulsex.png",
+			in: false
+		},
+		{
+			name: "Liquid Loans",
+			image: "liquidloans.png",
+			in: false
+	
+		},
+		{
+			name: "Hurricash",
+			image: "hurricash.png",
+			in: false
+		},
+		{
+			name: "Genius",
+			image: "genius.png",
+			in: false
+		},
+		{
+			name: "Mintra",
+			image: "mintra.png",
+			in: false
+		},
+		{
+			name: "Phiat",
+			image: "phiat.png",
+			in: false
+		},
+		{
+			name: "I.M.D",
+			image: "imd.png",
+			in: false
+		}]
+		)
 	}
 	
 	/*async function addData(){
@@ -136,170 +182,33 @@ export default function Home() {
 						<button className='w-5/12 h-20 text-xl text-white text-center bg-[#324dff] border-4 border-black my-5'>Claim All $WAIT</button>
 					</div>
 
-						<div className='w-full flex flex-col md:flex-row bg-white items-center justify-center pt-6'>
+					{sacs.map((sac,index) => (
+						<div key={sac.name} className='w-full flex flex-col md:flex-row bg-white items-center justify-center pt-6'>
 							<div>
 								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
-									<img src='pulse.png'></img>
+									<img src={sac.image}></img>
 								</div>
 								<div className='w-full flex justify-center'>
-									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">Pulse</a>
+									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">{sac.name}</a>
 								</div>								
 							</div>
 							<div>
 								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
-									<a className=" text-black text-center text-xl font-sans mx-16 my-6">If you participated in the Pulse sacrifice, you are eligible to claim free $WAIT tokens. You can claim your $WAIT for PLS here.</a>
+									<a className=" text-black text-center text-xl font-sans mx-16 my-6">If you participated in the {sac.name} sacrifice, you are eligible to claim free $WAIT tokens. You can claim your $WAIT for PLS here.</a>
 								</div>
-								<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
-									<button className='w-4/5 h-20 text-xl text-black text-center bg-white border-2 border-black my-5'>CLAIM $WAIT FOR PLS</button>
-								</div>
-
+								{sacs[index].in ?
+									<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
+										<button className='w-4/5 h-20 text-xl text-black text-center bg-blue-200 border-2 border-black my-5'>CLAIM $WAIT FOR {sac.name}</button>
+									</div>
+									:
+									<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
+										<button className='w-4/5 h-20 text-xl text-black text-center bg-white border-2 border-black my-5'>Unable to claim for  {sac.name}</button>
+									</div> 
+								}
+								
 							</div>
 						</div>
-
-						<div className='w-full flex flex-col md:flex-row bg-white items-center pt-6'>
-							<div>
-								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
-									<img src='pulsex.png'></img>
-								</div>
-								<div className='w-full flex justify-center'>
-									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">PulseX</a>
-								</div>								
-							</div>
-							<div>
-								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
-									<a className=" text-black text-center text-xl font-sans mx-16 my-6">If you participated in the PulseX sacrifice, you are eligible to claim free $WAIT tokens. You can claim your $WAIT for PLSX here.</a>
-								</div>
-								<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
-									<button className='w-4/5 h-20 text-xl text-black text-center bg-white border-2 border-black my-5'>CLAIM $WAIT FOR PLSX</button>
-								</div>
-
-							</div>
-						</div>
-
-						<div className='w-full flex flex-col md:flex-row bg-white items-center pt-6'>
-							<div>
-								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
-									<img src='liquidloans.png'></img>
-								</div>
-								<div className='w-full flex justify-center'>
-									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">Liquid Loans</a>
-								</div>								
-							</div>
-							<div>
-								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
-									<a className=" text-black text-center text-xl font-sans mx-16 my-6">If you participated in the Liquid Loans sacrifice, you are eligible to claim free $WAIT tokens. You can claim your $WAIT for Liquid Loans here.</a>
-								</div>
-								<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
-									<button className='w-4/5 h-20 text-xl text-black text-center bg-white border-2 border-black my-5'>CLAIM $WAIT FOR LIQUID LOANS</button>
-								</div>
-
-							</div>
-						</div>
-
-
-						<div className='w-full flex flex-col md:flex-row bg-white items-center pt-6'>
-							<div>
-								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
-									<img src='hurricash.png'></img>
-								</div>
-								<div className='w-full flex justify-center'>
-									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">Hurricash</a>
-								</div>
-							</div>
-							<div>
-								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
-									<a className=" text-black text-center text-xl font-sans mx-16 my-6">If you participated in the Hurricash sacrifice, you are eligible to claim free $WAIT tokens. You can claim your $WAIT for Hurricash here.</a>
-								</div>
-								<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
-									<button className='w-4/5 h-20 text-xl text-black text-center bg-white border-2 border-black my-5'>CLAIM $WAIT FOR HURRICASH</button>
-								</div>
-
-							</div>
-						</div>
-
-
-						<div className='w-full flex flex-col md:flex-row bg-white items-center pt-6'>
-							<div>
-								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
-									<img src='genius.png'></img>
-								</div>
-								<div className='w-full flex justify-center'>
-									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">Genius</a>
-								</div>								
-							</div>
-							<div>
-								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
-									<a className=" text-black text-center text-xl font-sans mx-16 my-6">If you participated in the Genius sacrifice, you are eligible to claim free $WAIT tokens. You can claim your $WAIT for Genius here.</a>
-								</div>
-								<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
-									<button className='w-4/5 h-20 text-xl text-black text-center bg-white border-2 border-black my-5'>CLAIM $WAIT FOR GENIUS</button>
-								</div>
-
-							</div>
-						</div>
-
-
-						<div className='w-full flex flex-col md:flex-row bg-white items-center pt-6'>
-							<div>
-								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
-									<img src='mintra.png'></img>
-								</div>
-								<div className='w-full flex justify-center'>
-									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">Mintra</a>
-								</div>								
-							</div>
-							<div>
-								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
-									<a className=" text-black text-center text-xl font-sans mx-16 my-6">If you participated in the Mintra sacrifice, you are eligible to claim free $WAIT tokens. You can claim your $WAIT for Mintra here.</a>
-								</div>
-								<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
-									<button className='w-4/5 h-20 text-xl text-black text-center bg-white border-2 border-black my-5'>CLAIM $WAIT FOR MINTRA</button>
-								</div>
-
-							</div>
-						</div>
-
-
-						<div className='w-full flex flex-col md:flex-row bg-white items-center pt-6'>
-							<div>
-								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
-									<img src='phiat.png'></img>
-								</div>
-								<div className='w-full flex justify-center'>
-									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">Phiat</a>
-								</div>								
-							</div>
-							<div>
-								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
-									<a className=" text-black text-center text-xl font-sans mx-16 my-6">If you participated in the Phiat sacrifice, you are eligible to claim free $WAIT tokens. You can claim your $WAIT for Phiat here.</a>
-								</div>
-								<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
-									<button className='w-4/5 h-20 text-xl text-black text-center bg-white border-2 border-black my-5'>CLAIM $WAIT FOR PHIAT</button>
-								</div>
-
-							</div>
-						</div>
-
-
-						<div className='w-full flex flex-col md:flex-row bg-white items-center pt-6'>
-							<div>
-								<div className='h-80 w-80 md:h-40 md:w-40 m-5'>
-									<img src='imd.png'></img>
-								</div>
-								<div className='w-full flex justify-center'>
-									<a className="w-full text-black text-center text-4xl font-sans font-thin my-6 justify-center">I.M.D</a>
-								</div>								
-							</div>
-							<div>
-								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
-									<a className=" text-black text-center text-xl font-sans mx-16 my-6">If you participated in the Interner Money Dividend sacrifice, you are eligible to claim free $WAIT tokens. You can claim your $WAIT for I.M.D here.</a>
-								</div>
-								<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
-									<button className='w-4/5 h-20 text-xl text-black text-center bg-white border-2 border-black my-5'>CLAIM $WAIT FOR IMD</button>
-								</div>
-
-							</div>
-						</div>
+					))}
 					
 					
 				</div>
