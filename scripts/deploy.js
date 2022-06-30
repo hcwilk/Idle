@@ -14,12 +14,12 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Tide = await hre.ethers.getContractFactory("Wait");
-  const tide = await Tide.deploy();
+  const Wait = await hre.ethers.getContractFactory("Wait");
+  const wait = await Wait.deploy();
 
-  await tide.deployed();
+  await wait.deployed();
 
-  console.log("Tide deployed to:", tide.address);
+  console.log("Tide deployed to:", wait.address);
 
 
 

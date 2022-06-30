@@ -2,7 +2,10 @@
 //import { collection, addDoc, getDocs } from "firebase/firestore"; 
 import React, {useEffect, useState} from 'react'
 import Web3Modal from 'web3modal'
-import {Contract, ethers} from 'ethers';
+import {Contract, ethers} from 'ethers'
+import Wait from '../../artifacts/contracts/Wait.sol/Wait.json' 
+import { WaitAddress } from '../tide_config'
+
 //import Modal from './Components/modal'
 //import {Chart, ArcElement} from 'chart.js'
 
@@ -10,6 +13,12 @@ import {Contract, ethers} from 'ethers';
 export default function Home() {
 
 	const [loadingState, setLoadingState] = useState('not-loaded');
+	const [id, setId] = useState("213");
+	const [id2, setId2] = useState("21212123");
+	const [id3, setId3] = useState("2123");
+	const [id4, setId4] = useState("21234");
+	const [id5, setId5] = useState("212345");
+	const [id6, setId6] = useState("212346");
 
 	const [sacs,setSacs] = useState([])
 
@@ -68,7 +77,7 @@ export default function Home() {
 			const phiatD = await WaitContract.inDataBase(6);
 			const iMDD = await WaitContract.inDataBase(7);
 
-			setPulseC(pulseC);
+			setPulseC(false);
 			setPulseXC(pulseXC);
 			setLiquidLoansC(liquidLoansC);
 			setMintraC(mintraC);
@@ -77,7 +86,7 @@ export default function Home() {
 			setPhiatC(phiatC);
 			setIMDC(iMDC);
 
-			setPulseD(pulseD);
+			setPulseD(true);
 			setPulseXD(pulseXD);
 			setLiquidLoansD(liquidLoansD);
 			setMintraD(mintraD);
@@ -96,46 +105,57 @@ export default function Home() {
 		setSacs([{
 			name: "Pulse",
 			image: "pulse.png",
-			in: false
+			inD: false,
+			C: false
+
 		},
 		{
 			name: "PulseX",
 			image: "pulsex.png",
-			in: false
-		},
+			inD: false,
+			C: false		},
 		{
 			name: "Liquid Loans",
 			image: "liquidloans.png",
-			in: false
-	
+			inD: false,
+			C: false	
 		},
 		{
 			name: "Hurricash",
 			image: "hurricash.png",
-			in: false
-		},
+			inD: false,
+			C: false		},
 		{
 			name: "Genius",
 			image: "genius.png",
-			in: false
-		},
+			inD: false,
+			C: false		},
 		{
 			name: "Mintra",
 			image: "mintra.png",
-			in: false
-		},
+			inD: false,
+			C: false		},
 		{
 			name: "Phiat",
 			image: "phiat.png",
-			in: false
-		},
+			inD: false,
+			C: false		},
 		{
 			name: "I.M.D",
 			image: "imd.png",
-			in: false
-		}]
+			inD: false,
+			C: false		}]
 		)
 	}
+
+	function reload(){
+		setId(Math.random().toString())
+		setId2(Math.random().toString())
+		setId5(Math.random().toString())
+		setId3(Math.random().toString())
+		setId4(Math.random().toString())
+		setId6(Math.random().toString())
+	  }
 	
 	/*async function addData(){
 		console.log("what")
@@ -196,11 +216,23 @@ export default function Home() {
 								<div className='w-full bg-white flex flex-col relative justify-center lg:flex-row gap-5'>
 									<a className=" text-black text-center text-xl font-sans mx-16 my-6">If you participated in the {sac.name} sacrifice, you are eligible to claim free $WAIT tokens. You can claim your $WAIT for PLS here.</a>
 								</div>
-								{sacs[index].in ?
-									<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
-										<button className='w-4/5 h-20 text-xl text-black text-center bg-blue-200 border-2 border-black my-5'>CLAIM $WAIT FOR {sac.name}</button>
-									</div>
+								{sacs[index].inD ?
+									
+									<div>
+									{sacs[index].C ?
+										<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
+											<button className='w-4/5 h-20 text-xl text-black text-center bg-blue-200 border-2 border-black my-5'>Already Claimed for {sac.name}</button>
+										</div>
 									:
+										<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
+											<button className='w-4/5 h-20 text-xl text-black text-center bg-blue-200 border-2 border-black my-5'>CLAIM $WAIT FOR {sac.name}</button>
+										</div>
+									}
+									</div>
+
+							
+									:
+									
 									<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
 										<button className='w-4/5 h-20 text-xl text-black text-center bg-white border-2 border-black my-5'>Unable to claim for  {sac.name}</button>
 									</div> 
