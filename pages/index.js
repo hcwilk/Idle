@@ -117,7 +117,7 @@ export default function Home() {
 		setId6(Math.random().toString())
 	}
 
-	async function checkData(){
+	async function checkData() {
 		const web3Modal = new Web3Modal();
 		const connection = await web3Modal.connect();
 		const provider = new ethers.providers.Web3Provider(connection);
@@ -132,7 +132,7 @@ export default function Home() {
 	
 	}
 
-	async function mintAll(){
+	async function mintAll() {
 		const web3Modal = new Web3Modal();
 		const connection = await web3Modal.connect();
 		const provider = new ethers.providers.Web3Provider(connection);
@@ -147,7 +147,7 @@ export default function Home() {
 	
 	}
 
-	async function mintSpecific(sac){
+	async function mintSpecific(sac) {
 		const web3Modal = new Web3Modal();
 		const connection = await web3Modal.connect();
 		const provider = new ethers.providers.Web3Provider(connection);
@@ -216,7 +216,7 @@ export default function Home() {
 										</div>
 									:
 										<div className='w-full bg-white flex flex-col relative justify-center items-center lg:flex-row gap-5'>
-											<button className='w-4/5 h-20 text-xl text-black text-center bg-green-200 border-2 border-black my-5' onClick={mintSpecific(index)}>CLAIM $WAIT FOR {sac.name}</button>
+											<button className='w-4/5 h-20 text-xl text-black text-center bg-green-200 border-2 border-black my-5' onClick={ () => {mintSpecific(index)}} >CLAIM $WAIT FOR {sac.name}</button>
 										</div>
 									}
 									</div>
