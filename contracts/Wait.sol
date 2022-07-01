@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import '@chainlink/contracts/src/v0.8/ChainlinkClient.sol';
-import '@chainlink/contracts/src/v0.8/ConfirmedOwner.sol';
+//import '@chainlink/contracts/src/v0.8/ChainlinkClient.sol';
+//import '@chainlink/contracts/src/v0.8/ConfirmedOwner.sol';
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
@@ -18,8 +18,9 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 //50% to us and 50% to users who did claim
 //Midnight bonus
 
-contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
-    using Chainlink for Chainlink.Request;
+contract Wait is ERC20, ERC20Burnable {
+    //using Chainlink for Chainlink.Request;
+    //ChainlinkClient, ConfirmedOwner
 
     address manager;
     uint256 public totalSacs = 8;
@@ -36,7 +37,8 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
     mapping(uint => uint) public unclaimedWait;
     mapping(uint => uint) public sacTimes;
     
-    constructor() ERC20("Wait", "WAIT") ConfirmedOwner(msg.sender){
+    constructor() ERC20("Wait", "WAIT") {
+        //ConfirmedOwner(msg.sender)
         manager = msg.sender;
         totalPeople[0] = 45110; //Pulse
         totalPeople[1] = 93920; //PulseX
@@ -56,9 +58,9 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
         sacTimes[6] = 1654387200; //Phiat
         sacTimes[7] = 1647734400; //Internet Money Dividend
 
-        setChainlinkToken(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
+        /*setChainlinkToken(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
         setChainlinkOracle(0x28E27a26a6Dd07a21c3aEfE6785A1420b789b53C);
-        jobId = '233eae6ef5c34ad2a0fe2eaed75b5f44';
+        jobId = '233eae6ef5c34ad2a0fe2eaed75b5f44';*/
     }
 
     modifier manager_function(){
@@ -73,7 +75,7 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
         return 0;
     }
 
-    function checkDatabase(string memory _address) public returns (bytes32 requestId) {
+    /*function checkDatabase(string memory _address) public returns (bytes32 requestId) {
         
         Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
        
@@ -119,6 +121,34 @@ contract Wait is ERC20, ERC20Burnable,  ChainlinkClient, ConfirmedOwner {
             yes-=1;
         }
         require(yes==0,"Something went wrong here");
+    }*/
+    function checkDatabase() public {
+        InData[0][msg.sender] = true;
+        InData[2][msg.sender] = true;
+        InData[4][msg.sender] = true;
+        
+    }
+
+    function inDatabase() public view returns(bool[8] memory) {
+        return [InData[0][msg.sender], 
+        InData[1][msg.sender],
+        InData[2][msg.sender],
+        InData[3][msg.sender],
+        InData[4][msg.sender],
+        InData[5][msg.sender],
+        InData[6][msg.sender],
+        InData[7][msg.sender]];
+    }
+
+    function haveClaimed() public view returns(bool[8] memory) {
+        return [Claimed[0][msg.sender],
+        Claimed[1][msg.sender],
+        Claimed[2][msg.sender],
+        Claimed[3][msg.sender],
+        Claimed[4][msg.sender],
+        Claimed[5][msg.sender],
+        Claimed[6][msg.sender],
+        Claimed[7][msg.sender]];
     }
 
     function mintableWait(uint sac) public view minting_on returns(uint){
