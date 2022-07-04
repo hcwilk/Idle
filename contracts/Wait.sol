@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-//import '@chainlink/contracts/src/v0.8/ChainlinkClient.sol';
-//import '@chainlink/contracts/src/v0.8/ConfirmedOwner.sol';
+import '@chainlink/contracts/src/v0.8/ChainlinkClient.sol';
+import '@chainlink/contracts/src/v0.8/ConfirmedOwner.sol';
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
@@ -18,14 +18,17 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 //50% to us and 50% to users who did claim
 //Midnight bonus
 
-contract Wait is ERC20, ERC20Burnable {
-    //using Chainlink for Chainlink.Request;
-    //ChainlinkClient, ConfirmedOwner
+contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
+    using Chainlink for Chainlink.Request;
 
     address manager;
     uint256 public totalSacs = 8;
     bool public minting = true;
     bytes32 private jobId;
+
+	event Testing(
+		string balls
+	);
 
 
 	mapping (uint => mapping(address => bool)) public InData;
@@ -36,31 +39,32 @@ contract Wait is ERC20, ERC20Burnable {
     mapping(uint => uint) public mintedPeople;
     mapping(uint => uint) public unclaimedWait;
     mapping(uint => uint) public sacTimes;
+	mapping(address => bool) public checked;
     
-    constructor() ERC20("Wait", "WAIT") {
-        //ConfirmedOwner(msg.sender)
+    constructor() ERC20("Wait", "WAIT")   ConfirmedOwner(msg.sender){
         manager = msg.sender;
         totalPeople[0] = 45110; //Pulse
         totalPeople[1] = 93920; //PulseX
         totalPeople[2] = 5720; //Liquid Loans
-        totalPeople[3] = 1212; //Mintra
+		totalPeople[3] = 145; //Hurricash
         totalPeople[4] = 644; //Genius
-        totalPeople[5] = 145; //Hurricash
+        totalPeople[5] = 1212; //Mintra
         totalPeople[6] = 649; //Phiat
         totalPeople[7] = 860; //Internet Money Dividend
 
         sacTimes[0] = 1627948800; //Pulse
         sacTimes[1] = 1645660800; //PulseX
         sacTimes[2] = 1647907200; //Liquid Loans
-        sacTimes[3] = 1646179200; //Mintra
+		sacTimes[3] = 1646092800; //Hurricash
         sacTimes[4] = 1654041600; //Genius
-        sacTimes[5] = 1646092800; //Hurricash
+		sacTimes[5] = 1646179200; //Mintra
         sacTimes[6] = 1654387200; //Phiat
         sacTimes[7] = 1647734400; //Internet Money Dividend
 
-        /*setChainlinkToken(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
+        setChainlinkToken(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
         setChainlinkOracle(0x28E27a26a6Dd07a21c3aEfE6785A1420b789b53C);
-        jobId = '233eae6ef5c34ad2a0fe2eaed75b5f44';*/
+        jobId = '233eae6ef5c34ad2a0fe2eaed75b5f44';
+
     }
 
     modifier manager_function(){
@@ -75,7 +79,7 @@ contract Wait is ERC20, ERC20Burnable {
         return 0;
     }
 
-    /*function checkDatabase(string memory _address) public returns (bytes32 requestId) {
+    function checkDatabase(string memory _address) public returns (bytes32 requestId) {
         
         Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
        
@@ -83,11 +87,16 @@ contract Wait is ERC20, ERC20Burnable {
         req.add('path',"bro");
         req.add('path1',"man");
 
+		emit Testing(_address);
+
         sendOperatorRequest(req, 0);
     }
 
     function fulfill(bytes32 _requestId, address user, uint binary) public recordChainlinkFulfillment(_requestId) {
         uint yes = binary;
+
+		checked[user]=true;
+		
         if(yes>=128){
             InData[7][user]=true;
             yes-=128;
@@ -121,12 +130,6 @@ contract Wait is ERC20, ERC20Burnable {
             yes-=1;
         }
         require(yes==0,"Something went wrong here");
-    }*/
-    function checkDatabase() public {
-        InData[0][msg.sender] = true;
-        InData[2][msg.sender] = true;
-        InData[4][msg.sender] = true;
-        
     }
 
     function inDatabase() public view returns(bool[8] memory) {
@@ -177,15 +180,24 @@ contract Wait is ERC20, ERC20Burnable {
 
     }
 
-    function mintableAllWait() public view minting_on returns (uint mintableWait1) {
+    function mintableAllWait() public view minting_on returns (uint[] memory) {
+		
+		uint[] memory testing = new uint[](8);
+
 
         for(uint i; i < totalSacs; i++) {
             if(!Claimed[i][msg.sender] && InData[i][msg.sender]) {
-                mintableWait1 += (block.timestamp - sacTimes[i]) / 3600;
+                testing[i] = (block.timestamp - sacTimes[i]) / 3600;
             }
         }
 
+		return testing;
+
     }
+
+	function hasChecked() public view returns(bool){
+		return checked[msg.sender];
+	}
     
     function mintAllWait() public minting_on {
 

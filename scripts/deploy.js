@@ -37,3 +37,8 @@ main()
   });
 
   //npx hardhat run --network PulseChain scripts/deploy.js 
+
+  // Gabriel if you were trying to run this ^^ script and it wouldn't work you are a dumbass because that's 
+  // Pulsechain. Fuck you. Love, Cole
+
+  // npx hardhat run --network rinkeby scripts/deploy.js 
