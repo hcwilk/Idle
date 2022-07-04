@@ -14,7 +14,7 @@ import { WaitAddress } from '../wait_config'
 export default function Home() {
 
 
-	const [loadingState, setLoadingState] = useState('not-loaded');
+	const [loadingState, setLoadingState] = useState('loaded');
 
 	const [sacs,setSacs] = useState([])
 	const [first,setFirst] = useState([])
@@ -23,6 +23,7 @@ export default function Home() {
 	const [checked, setChecked] = useState(false) 
 	const [addr, setAddr] = useState("")
 	const [id, setId] = useState("213");
+	const [text, setText] = useState("Connect");
 
 
 	
@@ -38,12 +39,110 @@ export default function Home() {
 		window.ethereum.on('accountsChanged', function (accounts) {
 		
 			
-
+			reload()
 			
 
 	
 		  }) 
 
+
+		  ethereum.request({ method: 'eth_accounts' }).then((accounts)=> {if(accounts.length>0){
+			init()
+			setText("Connected!")
+
+		  }
+		  else{
+			const yes = [{
+				id:0,
+				name: "Pulse",
+				image: "pulse.png",
+				time:1627948800,
+				inD: 0,
+				C: 0,
+				cla:0
+	
+			},
+			{
+				id:1,
+				name: "PulseX",
+				image: "pulsex.png",
+				time:1645660800,
+				inD: 0,
+				C: 0,
+				cla:0
+			},
+			{
+				id:2,
+				name: "Liquid Loans",
+				image: "liquidloans.png",
+				time:1647907200,
+				inD: 0,
+				C: 0,
+				cla:0
+			},
+			{
+				id:3,
+				name: "Hurricash",
+				image: "hurricash.png",
+				time:1646092800,
+				inD: 0,
+				C: 0,
+				cla:0
+			},
+			{
+				id:4,
+				name: "Genius",
+				image: "genius.png",
+				time:1654041600,
+				inD: 0,
+				C: 0,
+				cla:0
+			},
+			{
+				id:5,
+				name: "Mintra",
+				image: "mintra.png",
+				time: 1646179200,
+				inD: 0,
+				C: 0,
+				cla:0
+			},
+			{
+				id:6,
+				name: "Phiat",
+				image: "phiat.png",
+				time:1654387200,
+				inD: 0,
+				C: 0,
+				cla:0
+			},
+			{
+				id:7,
+				name: "I.M.D",
+				image: "imd.png",
+				time:1647734400,
+				inD: 0,
+				C: 0,
+				cla:0
+			}]
+			
+			setSacs(yes)
+	
+			console.log("what the fuck is going on")
+	
+			console.log(yes)
+		
+	
+			setFirst(yes.slice(0,4))
+			setEnd(yes.slice(4,8))
+		  }
+		  console.log(accounts)}).catch(console.error);
+
+
+		  
+
+
+		  
 		
 
 
@@ -53,24 +152,17 @@ export default function Home() {
 
 
 	async function connect(){ 
-		console.log("rbo")
 		if (window.ethereum) {
 
-		console.log("aht the shit")
  
 		await window.ethereum.request({ method: "eth_requestAccounts" });
 		window.web3 = new Web3(window.ethereum);
 		
 	   } else {
 		console.log("No wallet");
-	   }}
-
-
-
-	
-	
-
-	
+	   }
+	   init()
+	}
 
 
 	async function init(){
@@ -79,6 +171,7 @@ export default function Home() {
 
 			
 			const web3Modal = new Web3Modal()
+			console.log('please have something condition',web3Modal)
 			const connection = await web3Modal.connect()
 			console.log('fucking shit',connection)
 			const provider = new ethers.providers.Web3Provider(connection);
@@ -220,6 +313,12 @@ export default function Home() {
 		catch(error){
 			console.log(error)
 		}
+
+		setLoadingState("loaded")
+
+		console.log("what")
+
+
 	}
 
 
@@ -306,9 +405,8 @@ export default function Home() {
 								<h1 className='text-white text-6xl font-semibold mx-12'>$WAIT</h1> 
 							</div>
 							<div>
-								<button onClick={fuckyou} className='rounded-full w-48 h-16 bg-blue-400 md:mr-24' >Connect Wallet</button>
+								<button onClick={connect} className='rounded-full w-48 h-16 bg-blue-400 md:mr-24' >{text} </button>
 							</div>
-							<button onClick={fuckyou}>flkdsjf;ldsaj</button>
 							
 						</div>
 
