@@ -1,6 +1,14 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: false,
-}
+/**
+ * @type {import('next').NextConfig}
+ */
 
-module.exports = nextConfig
+ const nextConfig = {
+    webpack: (config, { webpack }) => {
+        config.plugins.push(new webpack.IgnorePlugin({
+            resourceRegExp: /^electron$/
+        }),);
+        return config
+    }
+  }
+  
+  module.exports = nextConfig
