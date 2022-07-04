@@ -27,7 +27,7 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
     bytes32 private jobId;
 
 	event Testing(
-		string balls
+		address balls
 	);
 
 
@@ -57,7 +57,7 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
         sacTimes[2] = 1647907200; //Liquid Loans
 		sacTimes[3] = 1646092800; //Hurricash
         sacTimes[4] = 1654041600; //Genius
-		sacTimes[5] = 1646179200; //Mintra
+		sacTimes[5] = 1647561600; //Mintra
         sacTimes[6] = 1654387200; //Phiat
         sacTimes[7] = 1647734400; //Internet Money Dividend
 
@@ -87,13 +87,15 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
         req.add('path',"bro");
         req.add('path1',"man");
 
-		emit Testing(_address);
 
         sendOperatorRequest(req, 0);
     }
 
     function fulfill(bytes32 _requestId, address user, uint binary) public recordChainlinkFulfillment(_requestId) {
         uint yes = binary;
+
+		emit Testing(user);
+
 
 		checked[user]=true;
 		
