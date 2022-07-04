@@ -420,7 +420,7 @@ export default function Home() {
 						</div>
 						:
 						<div className='w-full bg-white items-center mt-6'>
-							<form className='flex flex-col justify-center items-center' onSubmit={connect}>
+							<form className='flex flex-col justify-center items-center' onSubmit={checkData}>
 
 								<button type='submit'  className='md:w-5/12 w-3/5 h-12 md:text-xl text-lg text-white text-center bg-[#324dff] border-4 border-black my-5'>Check Database!</button>
 
