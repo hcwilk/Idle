@@ -6,6 +6,7 @@ import Web3Modal from 'web3modal'
 import {Contract, ethers} from 'ethers'
 import Wait from '../artifacts/contracts/Wait.sol/Wait.json' 
 import { WaitAddress } from '../wait_config'
+import Head from 'next/head'
 
 
 //import Modal from './Components/modal'
@@ -346,7 +347,16 @@ export default function Home() {
 	
 	  }
 
-
+	function IndexPage() {
+		return (
+		  <div>
+			<Head>
+			  <title>dApp - $WAIT</title>
+			  <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			</Head>
+		  </div>
+		)
+	}
 	
 
 
@@ -429,11 +439,13 @@ export default function Home() {
 
 	return (
 		<>
+			{IndexPage()}
+			
 			<div className="h-full flex justify-center">
 				
 				<>	
 				<div>
-						<div className='w-full md:h-32 h-80 bg-[#252E3F] flex items-center justify-between md:flex-row flex-col'>
+						<div className='w-full md:h-40 h-80 bg-[#252E3F] flex items-center justify-between md:flex-row flex-col'>
 							<div className='flex justify-center items-center md:flex-row flex-col md:ml-24'>
 								<div className='h-24 w-24 '>
 									<img src='WAIT.png'></img>
@@ -441,7 +453,7 @@ export default function Home() {
 								<h1 className='text-white text-6xl font-semibold mx-12'>$WAIT</h1> 
 							</div>
 							<div>
-								<button onClick={connect} className='rounded-full w-40 h-16 bg-blue-400 md:mr-12' >{text} </button>
+								<button onClick={connect} className='rounded-full w-40 h-16 bg-blue-400 mr-12 mb-4' >{text} </button>
 								<button onClick={addd} className='rounded-full w-40 h-16 bg-blue-400 md:mr-24' >Add to MetaMask</button>
 							</div>
 							
@@ -566,7 +578,9 @@ export default function Home() {
 					</div>
 
 					<div className='w-full flex items-center justify-center mt-12'>
-						<p className='w-3/5 text-center leading-loose'>No part of content produced by 0xWait may be redistributed without express written permission from 0xCoast. This content is for educational and informational purposes only and should not constitute investment advice or an offer to sell or the solicitation of an offer to purchase any products or services. This information is not intended for any persons who are prohibited from receiving such information under the laws applicable to their place of citizenship, domicile or residence.</p>
+						<p className='w-3/5 text-center leading-loose'>No part of content produced by 
+						<a className='text-[#324dff]'  href="https://0xwait.com/"> 0xWait </a>
+						may be redistributed without express written permission from 0xCoast. This content is for educational and informational purposes only and should not constitute investment advice or an offer to sell or the solicitation of an offer to purchase any products or services. This information is not intended for any persons who are prohibited from receiving such information under the laws applicable to their place of citizenship, domicile or residence.</p>
 					</div>
 					<div className='w-full flex items-center justify-center mt-12'>
 						<p className='w-4/5 text-center leading-loose'> © All rights reserved 0xCoast.</p>
