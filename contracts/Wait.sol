@@ -223,6 +223,7 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
 
     function mintableUnclaimedWait(uint sac) public view returns (uint waitAmount) {
 
+        require(sac<totalSacs, "not an accurate sacrifice");
         require(!minting, "Minting is still on");
         require(Claimed[sac][msg.sender], "You never claimed your wait or already claimed the unclaimed wait");
 
@@ -232,6 +233,7 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
     
     function mintUnclaimedWait(uint sac) public {
 
+        require(sac<totalSacs, "not an accurate sacrifice");
         require(!minting, "Minting is still on");
         require(Claimed[sac][msg.sender], "You never claimed your wait or already claimed the unclaimed wait");
 
