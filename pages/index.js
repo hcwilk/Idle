@@ -48,6 +48,7 @@ export default function Home() {
 
 
 		  ethereum.request({ method: 'eth_accounts' }).then((accounts)=> {if(accounts.length>0){
+			setAddr(accounts[0])
 			init()
 			setText("Connected!")
 
@@ -172,15 +173,15 @@ export default function Home() {
 
 			
 			const web3Modal = new Web3Modal()
-			console.log('please have something condition',web3Modal)
 			const connection = await web3Modal.connect()
-			console.log('fucking shit',connection)
 			const provider = new ethers.providers.Web3Provider(connection);
 			const signer = provider.getSigner();
 			const WaitContract = new ethers.Contract(WaitAddress, Wait.abi, signer);
 
 
 			setAddr(signer.provider.provider.selectedAddress)
+
+			console.log('this is empty',addr)
 
 
 			
@@ -200,7 +201,16 @@ export default function Home() {
 			console.log(contract)
 
 
-			contract.events.Reload().on('data', event => reload())
+			contract.events.Reload().on('data', event => {
+				const actual = signer.provider.provider.selectedAddress
+				const checker = event.returnValues._user.toLowerCase()
+				console.log('check',checker)
+				console.log("addfdslfa",actual)
+				console.log(checked==actual)
+				if(checker==actual){
+					reload()
+				}
+			})
 
 
 
@@ -542,7 +552,7 @@ export default function Home() {
 
 					<hr className='mt-10  border-black'></hr>
 	
-					<div className='h-52 w-full flex flex-col items-center justify-center'>
+					<div className='h-52 w-full flex flex-col items-center justify-center gap-6'>
 						<h1 className='text-2xl font-bold text-center'>Coast- a #pulsechain development company</h1>
 						<div className='flex justify-center'>
 							<a href='https://twitter.com/0xCoast'><img src='twit.png'  className='h-16 w-16 mx-5'></img></a>
@@ -556,7 +566,7 @@ export default function Home() {
 					</div>
 
 					<div className='w-full flex items-center justify-center mt-12'>
-						<p className='w-4/5 text-center leading-loose'>No part of content produced by 0xWait may be redistributed without express written permission from 0xCoast. This content is for educational and informational purposes only and should not constitute investment advice or an offer to sell or the solicitation of an offer to purchase any products or services. This information is not intended for any persons who are prohibited from receiving such information under the laws applicable to their place of citizenship, domicile or residence.</p>
+						<p className='w-3/5 text-center leading-loose'>No part of content produced by 0xWait may be redistributed without express written permission from 0xCoast. This content is for educational and informational purposes only and should not constitute investment advice or an offer to sell or the solicitation of an offer to purchase any products or services. This information is not intended for any persons who are prohibited from receiving such information under the laws applicable to their place of citizenship, domicile or residence.</p>
 					</div>
 					<div className='w-full flex items-center justify-center mt-12'>
 						<p className='w-4/5 text-center leading-loose'> © All rights reserved 0xCoast.</p>
