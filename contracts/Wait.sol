@@ -5,18 +5,6 @@ import '@chainlink/contracts/src/v0.8/ConfirmedOwner.sol';
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
-//236,389 addresses (not excluding non-ethereum wallets)
-//.11 to deploy on mainnet
-//.005 to deploy on Rinkeby
-//.00011 to add one address on Rinkeby
-//.00017 to add two addresses on Rinkeby
-//.05225 to add 870 addresses on Rinkeby (estimated)
-//14.18339 to add 236,389 addresses on Rinkeby (estimated)
-//283.6678 to add 236,389 addresses on mainnet (estimated)
-
-//Mint unclaimed Wait to us when minting is turned off
-//50% to us and 50% to users who did claim
-//Midnight bonus
 
 contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
     using Chainlink for Chainlink.Request;
@@ -27,8 +15,8 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
     bool public minting = true;
     bytes32 private jobId;
 
-    event Testing(
-        address balls
+    event Reload(
+        address _user
     );
 
 
@@ -95,7 +83,7 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
     function fulfill(bytes32 _requestId, address user, uint binary) public recordChainlinkFulfillment(_requestId) {
         uint yes = binary;
 
-        emit Testing(user);
+        emit Reload(user);
 
 
         checked[user]=true;
