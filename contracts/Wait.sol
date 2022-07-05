@@ -50,8 +50,8 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
         sacTimes[6] = 1654387200; //Phiat
         sacTimes[7] = 1647734400; //Internet Money Dividend
 
-        setChainlinkToken(0x514910771AF9Ca656af840dff83E8264EcF986CA);
-        setChainlinkOracle(0x2e973758d5f319ED4768570182cA601e970ff549);
+        setChainlinkToken(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
+        setChainlinkOracle(0x28E27a26a6Dd07a21c3aEfE6785A1420b789b53C);
         jobId = '233eae6ef5c34ad2a0fe2eaed75b5f44';
 
     }
