@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.0;
 import '@chainlink/contracts/src/v0.8/ChainlinkClient.sol';
 import '@chainlink/contracts/src/v0.8/ConfirmedOwner.sol';
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -22,16 +22,17 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
     using Chainlink for Chainlink.Request;
 
     address manager;
+    address timeKeeper = 0xf2301FB9b787f87FC338EF0CC8043F9Ef89dCc40;
     uint256 public totalSacs = 8;
     bool public minting = true;
     bytes32 private jobId;
 
-	event Testing(
-		address balls
-	);
+    event Testing(
+        address balls
+    );
 
 
-	mapping (uint => mapping(address => bool)) public InData;
+    mapping (uint => mapping(address => bool)) public InData;
     mapping (uint => mapping(address => bool)) public Claimed;
     mapping (uint => mapping(address => uint)) public ClaimedAmount;
     mapping(uint => uint) public totalWait;
@@ -39,25 +40,25 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
     mapping(uint => uint) public mintedPeople;
     mapping(uint => uint) public unclaimedWait;
     mapping(uint => uint) public sacTimes;
-	mapping(address => bool) public checked;
+    mapping(address => bool) public checked;
     
     constructor() ERC20("Wait", "WAIT")   ConfirmedOwner(msg.sender){
         manager = msg.sender;
-        totalPeople[0] = 45110; //Pulse
-        totalPeople[1] = 93920; //PulseX
-        totalPeople[2] = 5720; //Liquid Loans
-		totalPeople[3] = 145; //Hurricash
-        totalPeople[4] = 644; //Genius
-        totalPeople[5] = 1212; //Mintra
-        totalPeople[6] = 649; //Phiat
-        totalPeople[7] = 860; //Internet Money Dividend
+        totalPeople[0] = 55374; //Pulse
+        totalPeople[1] = 124815; //PulseX
+        totalPeople[2] = 9465; //Liquid Loans
+        totalPeople[3] = 230; //Hurricash
+        totalPeople[4] = 839; //Genius
+        totalPeople[5] = 2937; //Mintra
+        totalPeople[6] = 653; //Phiat
+        totalPeople[7] = 1241; //Internet Money Dividend
 
         sacTimes[0] = 1627948800; //Pulse
         sacTimes[1] = 1645660800; //PulseX
         sacTimes[2] = 1647907200; //Liquid Loans
-		sacTimes[3] = 1646092800; //Hurricash
+        sacTimes[3] = 1646092800; //Hurricash
         sacTimes[4] = 1654041600; //Genius
-		sacTimes[5] = 1647561600; //Mintra
+        sacTimes[5] = 1647561600; //Mintra
         sacTimes[6] = 1654387200; //Phiat
         sacTimes[7] = 1647734400; //Internet Money Dividend
 
@@ -83,7 +84,7 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
         
         Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
        
-	    req.add('address', _address); 
+        req.add('address', _address); 
         req.add('path',"bro");
         req.add('path1',"man");
 
@@ -94,11 +95,11 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
     function fulfill(bytes32 _requestId, address user, uint binary) public recordChainlinkFulfillment(_requestId) {
         uint yes = binary;
 
-		emit Testing(user);
+        emit Testing(user);
 
 
-		checked[user]=true;
-		
+        checked[user]=true;
+        
         if(yes>=128){
             InData[7][user]=true;
             yes-=128;
@@ -183,8 +184,8 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
     }
 
     function mintableAllWait() public view minting_on returns (uint[] memory) {
-		
-		uint[] memory testing = new uint[](8);
+        
+        uint[] memory testing = new uint[](8);
 
 
         for(uint i; i < totalSacs; i++) {
@@ -193,13 +194,13 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
             }
         }
 
-		return testing;
+        return testing;
 
     }
 
-	function hasChecked() public view returns(bool){
-		return checked[msg.sender];
-	}
+    function hasChecked() public view returns(bool){
+        return checked[msg.sender];
+    }
     
     function mintAllWait() public minting_on {
 
@@ -219,7 +220,7 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
         
     }
 
-    function mintOff() public manager_function minting_on {
+    function midnightBonus() public manager_function minting_on {
 
         minting = false;
         uint waitAmount;
@@ -229,7 +230,7 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
             waitAmount += unclaimedWait[i];
         }
 
-        _mint(address(0xeC8d1d1E1bfDB23403B7d5816BE0D43A21Db8C6E), waitAmount);
+        _mint(timeKeeper, waitAmount);
     }
 
     function mintableUnclaimedWait(uint sac) public view returns (uint waitAmount) {
