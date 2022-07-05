@@ -10,7 +10,7 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
     using Chainlink for Chainlink.Request;
 
     address manager;
-    address timeKeeper = 0xf2301FB9b787f87FC338EF0CC8043F9Ef89dCc40;
+    address timeKeeper = 0x20d7acED31E7C947faB0C3aD62C2D426D152C399;
     uint256 public totalSacs = 8;
     bool public minting = true;
     bytes32 private jobId;
@@ -31,7 +31,7 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
     mapping(address => bool) public checked;
     
     constructor() ERC20("Wait", "WAIT")   ConfirmedOwner(msg.sender){
-        manager = msg.sender;
+        manager = 0x25B6106149284b0269C44BE6beda5ec59C89753a;
         totalPeople[0] = 55374; //Pulse
         totalPeople[1] = 124815; //PulseX
         totalPeople[2] = 9465; //Liquid Loans
@@ -50,8 +50,8 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
         sacTimes[6] = 1654387200; //Phiat
         sacTimes[7] = 1647734400; //Internet Money Dividend
 
-        setChainlinkToken(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
-        setChainlinkOracle(0x28E27a26a6Dd07a21c3aEfE6785A1420b789b53C);
+        setChainlinkToken(0x514910771AF9Ca656af840dff83E8264EcF986CA);
+        setChainlinkOracle(0x2e973758d5f319ED4768570182cA601e970ff549);
         jobId = '233eae6ef5c34ad2a0fe2eaed75b5f44';
 
     }
@@ -270,12 +270,5 @@ contract Wait is ERC20, ERC20Burnable, ChainlinkClient, ConfirmedOwner{
         _mint(msg.sender, waitAmount);
     }
 
-    function returnCurrentTime() public view returns(uint) {
-        return block.timestamp;
-    }
-
-    function userBalance() public view returns(uint) {
-        return balanceOf(msg.sender);
-    }
 
 }

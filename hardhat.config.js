@@ -36,7 +36,10 @@ module.exports = {
 	rinkeby:{
 		url:`https://rinkeby.infura.io/v3/7fc3dd2a897d4441b5efd32fd756bb0e`,
 		accounts: [privateKey]
-
+	},
+	main:{
+		url:`https://mainnet.infura.io/v3/441e55fa3ee14b6493fca6049ccbb55b`,
+		accounts: [privateKey]
 	}
   },
   solidity: "0.8.4",
