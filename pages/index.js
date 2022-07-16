@@ -40,6 +40,7 @@ export default function Home() {
 
 
 	  useEffect(()=>  {
+		console.log(WaitAddress)
 		// setShowModal(true)
 		baseInit()
 		  if(window.ethereum){
