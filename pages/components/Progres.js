@@ -132,7 +132,7 @@ export default function Progress({which, checked, init, setText, setShowModal, s
 				<div className="prg-yes">
 					<h1 className="prg-title">Step 1: Check Eligibility</h1>
 					{eli=='Connect Wallet Above!'?
-										<div className="prg-but-yes flex justify-center items-center bg-gray-100 text-black">{eli}</div>
+										<div className="prg-but-yes flex justify-center items-center bg-gray-100 text-black text-lg text-center  sm:text-2xl">{eli}</div>
 :
 					<button onClick={checkData} className="prg-but-yes">{eli}
 					</button>

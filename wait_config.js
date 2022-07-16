@@ -1,4 +1,4 @@
-export const WaitAddress = '0xb5588C411ba0bb7D38865fdC51D082d004e519F7'
+export const WaitAddress = '0x6B68Ea01724C31B2Aba08c2196dd1Afe56Dc4Dfc'
 
 // Get rid of input box
 // button to connect to metamask
