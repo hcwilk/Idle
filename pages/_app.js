@@ -1,6 +1,7 @@
 import '../styles/globals.css'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { Provider } from 'react-redux'
 
 import * as ga from '../lib/ga'
 
@@ -20,7 +21,9 @@ function MyApp({ Component, pageProps }) {
 		  router.events.off('routeChangeComplete', handleRouteChange)
 		}
 	  }, [router.events])
-  return <Component {...pageProps} />
+  return (
+		<Component {...pageProps} />
+  )
 }
 
 export default MyApp
