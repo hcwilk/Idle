@@ -343,7 +343,7 @@ export default function Home() {
 
 	function reload(){
 		window.location.reload(false);
-		console.log("hitting")
+		console.log("no")
 	
 	  }
 
