@@ -37,6 +37,8 @@ export default function Home() {
 
 	  let web3Modal
 
+	  console.log(process.env.title)
+
 
 
 	  useEffect(()=>  {
@@ -285,23 +287,7 @@ export default function Home() {
 			
 			setSacs(yes)
 
-			// const shit = await axios.get(
-			// 	`https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=0xAE14B98b907A5aa3B59904aFE3B400b24374Df13&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${process.env.NEXT_PUBLIC_API_KEY}`
-			// )
-
-
-			// const checking = shit.data.result
-
-			
-			// let only
-			
-			// if(checking!=='undefined'){
-
-			// 	only = checking.filter(({from}) => signer.provider.provider.selectedAddress ===from);
-			// }
-			// else{
-			// 	only
-			// }
+		
 			
 			
 			setFirst(yes.slice(0,4))
@@ -383,13 +369,13 @@ export default function Home() {
 					<div className="bg-[url('../public/asset.png')] dark:bg-[url('../public/asset2.png')] bg-cover bg-no-repeat h-fit">
 												<h1 className='dark:text-white px-12 py-16 w-full text-center font-bold text-5xl max-w-8xl'>Claim your $WAIT now, or maybe wait a little longer!</h1>
 
-					<Progress {...{which, checked, setShowModal, init, colorTheme, setText, setShowModal, setTitle, eli}}></Progress>
+					<Progress {...{which, setWhich, checked, setShowModal, init, colorTheme, setText, setShowModal, setTitle, eli}}></Progress>
 					
 				<div className='flex justify-center '>
 
 				<div className='grid grid-rows-8 gap-4 lg:grid-cols-4 lg:grid-rows-2 max-w-7xl w-full mb-12 mx-4'>
 					{sacs.map((row,i) => (
-						<div className='flex justify-center 'key={i}>
+						<div className='flex justify-center h-fit'key={i}>
 
 						<div  className=' w-full  flex items-center flex-col bg-white dark:bg-[#252E3F] lg:m-2 rounded-3xl'>
 							<div className='w-full flex flex-row justify-between items-center lg:flex-col lg:items-center'>
@@ -411,7 +397,7 @@ export default function Home() {
 											<h1 className='grd-msg'>Unlock First!</h1>
 
 											:
-											<button className='  bg-[#00FF8E] grd-msg' onClick={() => {mintSpecific(row.id)}}>{row.cla} $WAIT</button>
+											<button className='  bg-[#00FF8E] grd-msg hover:bg-[#00e37e] hover:border-2 hover:mb-3' onClick={() => {mintSpecific(row.id)}}>{row.cla} $WAIT</button>
 										}	
 										</div>
 										:

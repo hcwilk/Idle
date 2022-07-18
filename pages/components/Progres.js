@@ -4,9 +4,10 @@ import {Contract, ethers} from 'ethers'
 import Wait from '../../artifacts/contracts/Wait.sol/Wait.json' 
 import { WaitAddress } from '../../wait_config'
 import Web3 from 'web3'
+import axios from 'axios'
 
 
-export default function Progress({which, checked, init, setText, setShowModal, setTitle, eli})  {
+export default function Progress({which, setWhich, checked, init, setText, setShowModal, setTitle, eli})  {
 
 
 	async function checkData() {
@@ -32,6 +33,48 @@ export default function Progress({which, checked, init, setText, setShowModal, s
 		catch(error){
 			console.log(error)
 		}
+	}
+
+	async function handleModal(){
+		setTitle("Feel like you've already unlocked your $WAIT?")
+		setText("Click CHECK AGAIN to check! If nothing changes when you recheck, you'll need to unlock your wait by clicking UNLOCK.")
+		setShowModal(true)
+	}
+
+	async function handleClick(){
+		const web3Modal = new Web3Modal();
+		const connection = await web3Modal.connect();
+		const provider = new ethers.providers.Web3Provider(connection);
+		const signer = provider.getSigner();
+
+		console.log("hitting")
+			const shit = await axios.get(
+				`https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=0xAE14B98b907A5aa3B59904aFE3B400b24374Df13&startblock=0&endblock=99999999&page=1&offset=1000&sort=desc&apikey=${process.env.NEXT_PUBLIC_API_KEY}`
+			)
+
+
+			const checking = shit.data.result
+
+			
+			let only
+			
+			if(checking!=='undefined'){
+
+				only = checking.filter(({from}) => signer.provider.provider.selectedAddress ===from);
+			}
+			else{
+				only = []
+			}
+
+			if(only.length>0){
+				setWhich(3)
+				localStorage.setItem(signer.provider.provider.selectedAddress,true)
+			}
+			else{
+			setTitle("Looks like you haven't unlocked your $WAIT yet!")
+			setText("Click UNLOCK so you're able to mint your $WAIT")
+			setShowModal(true)
+			}
 	}
 
 	
@@ -119,11 +162,11 @@ export default function Progress({which, checked, init, setText, setShowModal, s
 				</div>
 				<div className="prg-no">
 					<h1 className="prg-title">Step 2: Unlock $WAIT</h1>
-					<button className="prg-but-no">UNLOCK</button>
+					<div className="prg-but-no flex justify-center items-center">UNLOCK</div>
 				</div>
 				<div className="prg-no">
 					<h1 className="prg-title">Step 3: Claim $WAIT</h1>
-					<button className="prg-but-no">MINT ALL</button>
+					<div className="prg-but-no flex justify-center items-center">MINT ALL</div>
 				</div>			
 			</div>
 
@@ -141,11 +184,11 @@ export default function Progress({which, checked, init, setText, setShowModal, s
 				</div>
 				<div className="prg-no">
 					<h1 className="prg-title">Step 2: Unlock $WAIT</h1>
-					<button className="prg-but-no">UNLOCK</button>
+					<div className="prg-but-no flex justify-center items-center">UNLOCK</div>
 				</div>
 				<div className="prg-no">
 					<h1 className="prg-title">Step 3: Claim $WAIT</h1>
-					<button className="prg-but-no">MINT ALL</button>
+					<div className="prg-but-no flex justify-center items-center">MINT ALL</div>
 				</div>			
 			</div>
 			}
@@ -158,22 +201,25 @@ export default function Progress({which, checked, init, setText, setShowModal, s
 	else if(which==2){
 		return (
 			<div className='flex justify-center '>
-			<div className="prg-cont">
-				<div className="prg-no">
-					<h1 className="prg-title">Step 1: Check Eligibility</h1>
-					<div className="flex justify-center items-center prg-but-no bg-[#00FF8E] text-black">COMPLETE!</div>
+				<div className="prg-cont">
+					<div className="prg-no">
+						<h1 className="prg-title">Step 1: Check Eligibility</h1>
+						<div className="flex justify-center items-center prg-but-no bg-[#00FF8E] text-black">COMPLETE!</div>
+					</div>
+					<div className="prg-yes gap-4">
+						<h1 className="prg-title">Step 2: Unlock $WAIT</h1>
+							<button onClick={unlock} className="prg-but-yes py-3">UNLOCK</button>
+							<div className="w-full flex items-center justify-center">
+								<button onClick={handleClick} className="prg-but-yes text-xl h-12 w-2/3">CHECK AGAIN</button>
+								<button onClick={handleModal}><img src='ingo.png' className='w-12 h-12'></img></button>				  
+							</div>
+					</div>
+					<div className="prg-no">
+						<h1 className="prg-title">Step 3: Claim $WAIT</h1>
+						<div className="prg-but-no flex justify-center items-center">MINT ALL</div>
+					</div>			
 				</div>
-				<div className="prg-yes">
-					<h1 className="prg-title">Step 2: Unlock $WAIT</h1>
-					<button onClick={unlock} className="prg-but-yes">UNLOCK</button>
-				</div>
-				<div className="prg-no">
-					<h1 className="prg-title">Step 3: Claim $WAIT</h1>
-					<button className="prg-but-no">MINT ALL</button>
-				</div>			
 			</div>
-		   
-		</div>
 	
 		);
 	}
@@ -183,11 +229,11 @@ export default function Progress({which, checked, init, setText, setShowModal, s
 			<div className="prg-cont">
 				<div className="prg-no">
 					<h1 className="prg-title">Step 1: Check Eligibility</h1>
-					<div className="flex justify-center items-center prg-but-no bg-[#00FF8E] text-black">COMPLETE!</div>
+					<div className="flex justify-center items-center prg-but-no bg-[#00FF8E]  text-black">COMPLETE!</div>
 				</div>
 				<div className="prg-no ">
 					<h1 className="prg-title">Step 2: Unlock $WAIT</h1>
-					<div className="flex justify-center items-center prg-but-no bg-[#00FF8E] text-black">COMPLETE!</div>
+					<div className="flex justify-center items-center prg-but-no bg-[#00FF8E]  text-black">COMPLETE!</div>
 				</div>
 				<div className="prg-yes">
 					<h1 className="prg-title">Step 3: Claim $WAIT</h1>

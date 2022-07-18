@@ -21,9 +21,9 @@ export default function Wallet({connect,addr})  {
 		return (
 			<>
 			{addr==""?
-			<button className='btn-nav' onClick={connect}>Connect Wallet</button>
+			<button className='btn-nav hover:bg-[#324DFF] hover:border-2 border-black dark:border-white' onClick={connect}>Connect Wallet</button>
 			:
-			<div className='btn-nav' onClick={connect}>Connected!</div>
+			<div className='btn-nav hover:bg-[#324DFF]' onClick={connect}>Connected!</div>
 			}
 			</>
 			)

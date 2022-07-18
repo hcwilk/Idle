@@ -9,10 +9,10 @@ export default function Footer(){
 						<div className='h-52 w-full flex flex-col items-center justify-center gap-6'>
 							<h1 className='text-2xl font-bold text-center dark:text-white'>Coast- a #pulsechain development company</h1>
 							<div className='flex justify-center'>
-								<a href='https://twitter.com/0xCoast'><img src='twit.png'  className='h-16 w-16 mx-5'></img></a>
+								<a href='https://twitter.com/0xCoast'><img src='twit.png'  className='h-16 w-16 mx-5 hover:border-2'></img></a>
 	
 	
-								<a href='https://t.me/Coast0x'><img src='tele.png' className='h-16 w-16  mx-5'></img> </a>
+								<a href='https://t.me/Coast0x'><img src='tele.png' className='h-16 w-16  mx-5 hover:border-2'></img> </a>
 							</div>
 						</div>
 						

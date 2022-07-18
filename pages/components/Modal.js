@@ -16,8 +16,8 @@ export default function Modal({showModal, setShowModal, colorTheme, text, title}
 					<div className="relative bg-white  rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-5xl sm:w-full">
 						<div className="bg-white dark:bg-[#494E70] px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
 							<div className="sm:flex sm:items-start">
-								<div className="mx-auto flex-shrink-0 flex items-center justify-center rounded-full bg-red-100 sm:mx-0 ">
-									<img src="Spin.gif" className="w-16 h-16"></img>
+								<div className="flex justify-center">
+									<img src="Spinn.gif" className="w-16 h-16"></img>
 								</div>
 					
 							<div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
@@ -36,10 +36,16 @@ export default function Modal({showModal, setShowModal, colorTheme, text, title}
 
 							
 						</div>
-						{/* {}
+						<>
+						
+						{title=="Feel like you've already unlocked your $WAIT?" || title=="Looks like you haven't unlocked your $WAIT yet!"?
 						<div className="flex justify-end">
 							<button onClick={()=> {setShowModal(false)}} className="bg-[#252E3F] text-white h-10 w-20 rounded-2xl">Close</button>
-						</div> */}
+						</div>
+						:
+						<></>
+						}
+						</>
 						
 						
 					</div>

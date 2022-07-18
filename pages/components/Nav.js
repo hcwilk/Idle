@@ -86,7 +86,7 @@ export default function Navbar({init, colorTheme, setColorTheme, addr})  {
 					</div>
 					<div className=' flex flex-col md:flex-row gap-6 items-center md:justify-between w-1/2 md:mr-6'>
 						<Wallet {...{connect, addr}}></Wallet>
-						<button onClick={addd} className='btn-nav' ><div className='w-3/5'>Add to MetaMask</div> <img src='WAIT.png' className='w-12 h-12'></img></button>
+						<button onClick={addd} className='btn-nav hover:border-2' ><div className='w-3/5'>Add to MetaMask</div> <img src='WAIT.png' className='w-12 h-12'></img></button>
 					
 						<div className='mb-6 md:mb-0'>
 
