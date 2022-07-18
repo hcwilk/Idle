@@ -11,9 +11,5 @@
     }
   }
   
-  module.exports = {nextConfig,
-  
-	env : {
-		title: "maybe this owrks?"
-	}
+  module.exports = {nextConfig
 }
