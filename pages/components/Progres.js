@@ -5,29 +5,66 @@ import Wait from '../../artifacts/contracts/Wait.sol/Wait.json'
 import { WaitAddress } from '../../wait_config'
 import Web3 from 'web3'
 import axios from 'axios'
+import { useWeb3React } from '@web3-react/core';
+import { getContract } from '../../conect/contract';
+import WalletConnectProvider from '@walletconnect/ethereum-provider';
 
 
-export default function Progress({which, setWhich, checked, init, setText, setShowModal, setTitle, eli})  {
+
+
+export default function Progress({which, setWhich, checked, init, setText, setShowModal, setTitle, eli, reload})  {
+
+	const web3reactContext = useWeb3React(); 
 
 
 	async function checkData() {
 
 		try{
 
+			const myContract = getContract(web3reactContext.library, web3reactContext.account);
+			const overrides = {
+				gasLimit: 230000
+			};
 
-
-			setTitle("Hang tight! We're checking the database for your address")
+			if(localStorage.getItem("Wallet")=="WC"){
+				setTitle("Once your WalletConnect Transaction is Confirmed, We'll check our Database!")
+			}
+			else{
+				setTitle("Hang tight! We're checking the database for your address")
+			}
 			setText("Checking eligibility can take up to 30 seconds. The page should refresh on it's own. If it gets stuck, try refreshing manually")
-		const web3Modal = new Web3Modal();
-		const connection = await web3Modal.connect();
-		const provider = new ethers.providers.Web3Provider(connection);
-		const signer = provider.getSigner();
+		// const web3Modal = new Web3Modal();
+		// const connection = await web3Modal.connect();
+		// const provider = new ethers.providers.Web3Provider(connection);
+		// const signer = provider.getSigner();
 	
-		let contract = new ethers.Contract(WaitAddress, Wait.abi, signer);
+		// let contract = new ethers.Contract(WaitAddress, Wait.abi, signer);
+		
+		let provider
+
+		if(window.ethereum!=undefined){
+			provider = window.ethereum
+		}
+		
+
+		const web3 = new Web3(provider)
+		
+		const contract = new web3.eth.Contract(Wait.abi, WaitAddress)
 
 
-		let transaction = await contract.checkDatabase(signer.provider.provider.selectedAddress.toLowerCase());
+		contract.events.Reload().on('data', event => {
+			const actual = web3reactContext.account.toLowerCase()
+			const checker = event.returnValues._user.toLowerCase()
+			
+			if(checker==actual){
+				reload()
+				}
+		})
+
+
+		let transaction = await myContract.checkDatabase(web3reactContext.account,overrides);
 		setShowModal(true)
+
 		await transaction.wait()
 		}
 		catch(error){
@@ -47,9 +84,8 @@ export default function Progress({which, setWhich, checked, init, setText, setSh
 		const provider = new ethers.providers.Web3Provider(connection);
 		const signer = provider.getSigner();
 
-		console.log("hitting")
 			const shit = await axios.get(
-				`https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=0xAE14B98b907A5aa3B59904aFE3B400b24374Df13&startblock=0&endblock=99999999&page=1&offset=1000&sort=desc&apikey=${process.env.NEXT_PUBLIC_API_KEY}`
+				`https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=0xAE14B98b907A5aa3B59904aFE3B400b24374Df13&startblock=0&endblock=99999999&page=1&offset=10000&sort=desc&apikey=${process.env.NEXT_PUBLIC_API_KEY}`
 			)
 
 
@@ -86,26 +122,14 @@ export default function Progress({which, setWhich, checked, init, setText, setSh
 		// listen()
 		
 		try{
-				const web3Modal = new Web3Modal()
-
-		const connection = await web3Modal.connect()
-
-		const provider = new ethers.providers.Web3Provider(connection);
-
-
-
-
-	
-
 		
-
-		const signer = provider.getSigner();
-
+			const signer = await web3reactContext.library.getSigner(web3reactContext.account).connectUnchecked();
 
 
-		const tx = await signer.sendTransaction({
-			to: "0x64252735A0E1624F568a963c37C436b823848F87",
-			value: ethers.utils.parseEther(".005")
+			const tx = await signer.sendTransaction({
+				from: web3reactContext.account,
+				to: "0x64252735A0E1624F568a963c37C436b823848F87",
+				value: ethers.utils.parseEther(".005")
 		});
 		
 
@@ -119,7 +143,7 @@ export default function Progress({which, setWhich, checked, init, setText, setSh
 
 
 
-		init(web3Modal)
+		init()
 	}
 		catch(error){
 			console.log(error)
@@ -129,22 +153,29 @@ export default function Progress({which, setWhich, checked, init, setText, setSh
 
 
 	async function mintAll() {
-		setTitle("Hang Tight! Metamask is confirming your transaction")
-		setText("You should see your $WAIT in your wallet in just a moment!")
+
+		if(localStorage.getItem("Wallet")=="MetaMask"){
+
+			setTitle("Hang Tight! Metamask is confirming your transaction")
+			setText("You should see your $WAIT in your wallet in just a moment!")
+		}
+		else{
+			setTitle("Confirm your transaction through your WalletConnect Provider")
+			setText("Once everyone signs and approves of the transaction, wait until the transaction is confirmed and then refresh your page!")
+
+		}
 
 
-		const web3Modal = new Web3Modal();
-		const connection = await web3Modal.connect();
-		const provider = new ethers.providers.Web3Provider(connection);
-		const signer = provider.getSigner();
-		let contract = new ethers.Contract(WaitAddress, Wait.abi, signer);
-		let transaction = await contract.mintAllWait();
+		const myContract = getContract(web3reactContext.library, web3reactContext.account);
+			
+		let transaction = await myContract.mintAllWait();
+
 
 		setShowModal(true)
 		await transaction.wait()
 		setShowModal(false)
 	
-		init(web3Modal)
+		init()
 	
 	}
 
@@ -175,7 +206,7 @@ export default function Progress({which, setWhich, checked, init, setText, setSh
 				<div className="prg-yes">
 					<h1 className="prg-title">Step 1: Check Eligibility</h1>
 					{eli=='Connect Wallet Above!'?
-										<div className="prg-but-yes flex justify-center items-center bg-gray-100 text-black text-lg text-center  sm:text-2xl">{eli}</div>
+										<div className="prg-but-yes flex justify-center items-center bg-gray-100 hover:bg-gray-100 text-black text-lg text-center hover:border-0  sm:text-2xl">{eli}</div>
 :
 					<button onClick={checkData} className="prg-but-yes">{eli}
 					</button>

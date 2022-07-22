@@ -12,25 +12,32 @@ import Image from 'next/image'
 
 
 
-export default function Navbar({init, colorTheme, setColorTheme, addr})  {
+export default function Navbar({init, colorTheme, setColorTheme, reload, setShowModal, setText, setTitle})  {
 
-	
+	useEffect(() => {
+		setColorTheme(localStorage.getItem('theme'))
+  	},[])
 
-	async function connect(){ 
-		const web3Modal =  await new Web3Modal({
-			cacheProvider: false, // optional
-			providerOptions // required
-		  });
 
-		  init(web3Modal)
-		  console.log('???')
+	function toggleColor(){
+		let col = localStorage.getItem('theme')
+		if(col=='dark'){
+			setColorTheme('light')
+		}
+		else{
+			setColorTheme('dark')
+		}
 	}
 
 
 	async function addd(){
-		console.log(
-			'holy shit'
-		)
+		
+		if(localStorage.getItem("Wallet")=='WC'){
+			setTitle("WalletConnect")
+			setText("If you're using WalletConnect, the $WAIT Token will automatically be added to your wallet!")
+			
+			setShowModal(true)
+		}
 
 		try {
 		  // wasAdded is a boolean. Like any RPC method, an error may be thrown.
@@ -47,10 +54,9 @@ export default function Navbar({init, colorTheme, setColorTheme, addr})  {
 			},
 		  });
 
-		  console.log("hwa tthe fuck")
-
+ 
 		  const web3Modal = new Web3Modal()
-			init(web3Modal)
+			// init(web3Modal)
 	
 		  
 		
@@ -58,15 +64,16 @@ export default function Navbar({init, colorTheme, setColorTheme, addr})  {
 			console.log('Thanks for your interest!');
 		  } else {
 			console.log('Reload the page!');
-		  }
+		  } 
 		} catch (error) {
 		  console.log(error);
-		  console.log("hsit")
 		}
 
 
 		
 	  }
+
+	 
 
 
 
@@ -85,14 +92,25 @@ export default function Navbar({init, colorTheme, setColorTheme, addr})  {
 						<h1 className=' text-6xl font-semibold mr-12 ml-6 my-6 dark:text-white'>$WAIT</h1> 
 					</div>
 					<div className=' flex flex-col md:flex-row gap-6 items-center md:justify-between w-1/2 md:mr-6'>
-						<Wallet {...{connect, addr}}></Wallet>
+						<Wallet {...{init, reload}}></Wallet>
 						<button onClick={addd} className='btn-nav hover:border-2' ><div className='w-3/5'>Add to MetaMask</div> <img src='WAIT.png' className='w-12 h-12'></img></button>
 					
 						<div className='mb-6 md:mb-0'>
 
+							<button className="bg-[url('../public/light.png')] dark:bg-[url('../public/dark.png')] bg-no-repeat bg-contain w-16 h-16 md:mt-8" onClick={toggleColor}></button>
+
 						
-						{colorTheme === "dark" ? (
+						{/* {colorTheme === "light" ? (
 							<img
+							onClick={() => setColorTheme("light")}
+							src="dark.png"
+							height={30}
+							width={60}
+						>
+							
+						</img>
+							) : (
+								<img
 								onClick={() => setColorTheme("dark")}
 								src="light.png"
 								height={30}
@@ -100,16 +118,8 @@ export default function Navbar({init, colorTheme, setColorTheme, addr})  {
 							>
 								
 							</img>
-							) : (
-								<img
-								onClick={() => setColorTheme("light")}
-								src="dark.png"
-								height={30}
-								width={60}
-							>
 								
-							</img>
-							)}
+							)} */}
 							</div>
 					</div>
 					
