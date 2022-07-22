@@ -1,5 +1,10 @@
 
+import { useWeb3React } from '@web3-react/core';
+
 export default function Footer(){
+	const web3reactContext = useWeb3React(); 
+
+	
 
 
 	return(

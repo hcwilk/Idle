@@ -19,7 +19,7 @@ async function main() {
 
   await wait.deployed();
 
-  console.log("Tide deployed to:", wait.address);
+  console.log("Wait deployed to:", wait.address);
 
 
 

@@ -13,6 +13,9 @@ import Footer from './components/Footer';
 import InfoBar from './components/Info';
 import useDarkMode from "./components/useDarkMode";
 import Demo from './components/demo';
+import { useWeb3React } from '@web3-react/core';
+import { getContract } from '../conect/contract';
+
 
 
 
@@ -35,41 +38,26 @@ export default function Home() {
 	const [title, setTitle] = useState("Hang tight! We're checking the database for your address!");
 	const [eli, setEli] = useState("Connect Wallet Above!");
 
-	  let web3Modal
+	const web3reactContext = useWeb3React(); 
+	
 
-	  console.log(process.env.title)
-
-
-
-	  useEffect(()=>  {
+	  useEffect(()=>  { 		
 		// setShowModal(true)
 		baseInit()
 		  if(window.ethereum){
 			window.ethereum.on('accountsChanged', function (accounts) {
 				reload()
 			}) 
-				ethereum.request({ method: 'eth_accounts' }).then((accounts)=> {if(accounts.length>0){
-				web3Modal = new Web3Modal()
-				init(web3Modal)
-			}else
-			{
 				baseInit()
-			}})
 		  }
 		  else{
 			baseInit()
 		  }
-
-
-	
-		
-	
-
 	  },[])
 
-	
-	  function baseInit(){
-		const yes = [{
+
+	  async function baseInit(){
+		const yes = [{ 
 							id:0,
 							name: "Pulse",
 							image: "pulse.png",
@@ -141,65 +129,28 @@ export default function Home() {
 							inD: 0,
 							C: 0,
 							cla:0
-						}]
-						
+						}]	
 						setSacs(yes)
-				
-					
-				
-						setFirst(yes.slice(0,4))
-						setEnd(yes.slice(4,8))
 					  }
 	  
-
-
-
-
-
-
-
-	async function init(maybe){
-
-
-		try{
-			const instance = await maybe.connect();
-			const provider = new ethers.providers.Web3Provider(instance);
-			const signer = provider.getSigner();
-	
-			const WaitContract = new ethers.Contract(WaitAddress, Wait.abi, signer);
-
+	async function init(){
+		try{ 
 			setEli("CHECK ELIGIBILITY")
+			const WaitContract = await getContract(web3reactContext.library, web3reactContext.account);
+			const overrides = {
+				gasLimit: 230000
+			};
+
+			console.log("waht")
 
 
-
-
-			setAddr(signer.provider.provider.selectedAddress)
-
-			
 			const data1 = await WaitContract.inDatabase();
+
 			const claim1 = await WaitContract.haveClaimed();
 
 			const jflkdfsdfa = await WaitContract.hasChecked();
 
 			const arrayClaimable = await WaitContract.mintableAllWait();	
-
-			let providerr = window.ethereum;
-			
-			const web3 = new Web3(providerr)
-			
-			const contract = new web3.eth.Contract(Wait.abi, WaitAddress)
-
-
-		
-
-			contract.events.Reload().on('data', event => {
-				const actual = signer.provider.provider.selectedAddress
-				const checker = event.returnValues._user.toLowerCase()
-				if(checker==actual){
-					reload()
-				}
-			})
-
 
 			if(data1.includes(true)){
 				setChecked(true)
@@ -299,7 +250,7 @@ export default function Home() {
 
 
 			if(jflkdfsdfa && sum>0){
-				if(localStorage.getItem(signer.provider.provider.selectedAddress)){
+				if(localStorage.getItem(web3reactContext.account.toLowerCase()) || localStorage.getItem("Wallet")=='WC'){
 					setWhich(3)
 				}
 				else{setWhich(2)}
@@ -319,21 +270,30 @@ export default function Home() {
 	  }
 
 	  async function mintSpecific(sac) {
-		setTitle("Hang Tight! Metamask is confirming your transaction")
-		setText("You should see your $WAIT in your wallet in just a moment!")
+		if(localStorage.getItem("Wallet")=="MetaMask"){
 
-		const web3Modal = new Web3Modal();
-		const connection = await web3Modal.connect();
-		const provider = new ethers.providers.Web3Provider(connection);
-		const signer = provider.getSigner();
+			setTitle("Hang Tight! Metamask is confirming your transaction")
+			setText("You should see your $WAIT in your wallet in just a moment!")
+		}
+		else{
+			setTitle("Confirm your transaction through your WalletConnect Provider")
+			setText("Once everyone signs and approves of the transaction, wait until the transaction is confirmed and then refresh your page!")
+
+		}
+
+
+		const myContract = getContract(web3reactContext.library, web3reactContext.account);
+			
+	
+		init()
 
 		try{
-			let contract = new ethers.Contract(WaitAddress, Wait.abi, signer);
-			let transaction = await contract.mintWait(sac);
+			let transaction = await myContract.mintWait(sac);
 
 			setShowModal(true)
 			await transaction.wait()
 			setShowModal(false)
+	
 		}
 		catch(error){
 			console.log(error)
@@ -342,8 +302,7 @@ export default function Home() {
 
 	
 	
-		init(web3Modal)
-	
+		init()
 	}
 
 	function IndexPage() {
@@ -365,11 +324,11 @@ export default function Home() {
 			<Modal {...{showModal, setShowModal, colorTheme, text, title}}></Modal>
 				<>	
 				<div>
-					<Navbar{...{init, colorTheme, setColorTheme, addr}}></Navbar>
+					<Navbar{...{init, colorTheme, setColorTheme, reload, setShowModal, setText, setTitle}}></Navbar>
 					<div className="bg-[url('../public/asset.png')] dark:bg-[url('../public/asset2.png')] bg-cover bg-no-repeat h-fit">
 												<h1 className='dark:text-white px-12 py-16 w-full text-center font-bold text-5xl max-w-8xl'>Claim your $WAIT now, or maybe wait a little longer!</h1>
 
-					<Progress {...{which, setWhich, checked, setShowModal, init, colorTheme, setText, setShowModal, setTitle, eli}}></Progress>
+					<Progress {...{which, setWhich, checked, setShowModal, init, colorTheme, setText, setShowModal, setTitle, eli, reload, setEli}}></Progress>
 					
 				<div className='flex justify-center '>
 
@@ -417,17 +376,9 @@ export default function Home() {
 					))}
 				</div>
 				</div>
-
-
 					<Demo></Demo>
-				
 					<Footer{...{colorTheme}}></Footer>
-
-
-					</div>
-					
-
-					
+					</div>					
 				</div>	
 				</>
 				
