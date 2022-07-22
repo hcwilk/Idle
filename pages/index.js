@@ -141,7 +141,6 @@ export default function Home() {
 				gasLimit: 230000
 			};
 
-			console.log("waht")
 
 
 			const data1 = await WaitContract.inDatabase();
