@@ -141,9 +141,6 @@ export default function Home() {
 				gasLimit: 230000
 			};
 
-			// console.log(web3reactContext.account)
-			// console.log(web3reactContext.account.toLowerCase())
-			// console.log("0xa75E3613F23C76BE1e5a314e70C9859313711e45".toLowerCase())
 
 
 

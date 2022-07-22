@@ -55,6 +55,9 @@ export default function Progress({which, setWhich, checked, init, setText, setSh
 		contract.events.Reload().on('data', event => {
 			const actual = web3reactContext.account.toLowerCase()
 			const checker = event.returnValues._user.toLowerCase()
+
+			console.log("actual ",actual)
+			console.log("checker", checker)
 			
 			if(checker==actual){
 				reload()
