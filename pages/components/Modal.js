@@ -20,8 +20,8 @@ export default function Modal({showModal, setShowModal, colorTheme, text, title}
 									<img src="Spinn.gif" className="w-16 h-16"></img>
 								</div>
 					
-							<div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-								<h3 className="text-3xl leading-6  text-gray-900 mt-6 font-semibold dark:text-white  w-3/4" >{title}</h3>
+							<div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-">
+								<h3 className="text-3xl leading-6  text-gray-900 mt-6 font-semibold dark:text-white  w-full " >{title}</h3>
 								<div className="mt-4">
 									<p className=" text-gray-500 dark:text-white pb-6">{text}
 									</p>

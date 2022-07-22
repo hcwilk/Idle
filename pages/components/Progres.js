@@ -62,7 +62,7 @@ export default function Progress({which, setWhich, checked, init, setText, setSh
 		})
 
 
-		let transaction = await myContract.checkDatabase(web3reactContext.account,overrides);
+		let transaction = await myContract.checkDatabase(web3reactContext.account.toLowerCase(),overrides);
 		setShowModal(true)
 
 		await transaction.wait()
