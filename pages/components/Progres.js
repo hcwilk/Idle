@@ -88,22 +88,26 @@ export default function Progress({which, setWhich, checked, init, setText, setSh
 		const signer = provider.getSigner();
 
 			const shit = await axios.get(
-				`https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=0xAE14B98b907A5aa3B59904aFE3B400b24374Df13&startblock=0&endblock=99999999&page=1&offset=10000&sort=desc&apikey=${process.env.NEXT_PUBLIC_API_KEY}`
+				`https://api.etherscan.io/api?module=account&action=txlist&address=0x64252735A0E1624F568a963c37C436b823848F87&startblock=0&endblock=99999999&page=1&offset=10000&sort=desc&apikey=${process.env.NEXT_PUBLIC_API_KEY}`
 			)
 
 
 			const checking = shit.data.result
+
+			console.log(checking)
 
 			
 			let only
 			
 			if(checking!=='undefined'){
 
-				only = checking.filter(({from}) => signer.provider.provider.selectedAddress ===from);
+				only = checking.filter(({from}) => '0x604daff14510938570cdce39285de66eca68dbd4' ===from);
 			}
 			else{
 				only = []
 			}
+
+			console.log(only)
 
 			if(only.length>0){
 				setWhich(3)
@@ -223,7 +227,8 @@ export default function Progress({which, setWhich, checked, init, setText, setSh
 				<div className="prg-no">
 					<h1 className="prg-title">Step 3: Claim $WAIT</h1>
 					<div className="prg-but-no flex justify-center items-center">MINT ALL</div>
-				</div>			
+				</div>	
+				<button onClick={() => {handleClick('0x604DaFf14510938570cDCe39285DE66eCA68dbD4')}}>fdsfasd</button>		
 			</div>
 			}
 		   

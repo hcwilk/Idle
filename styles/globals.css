@@ -36,7 +36,7 @@
 	}
 
 	.grd-msg{
-		@apply w-full  text-center text-3xl rounded-full bg-gray-100 py-4 mb-4
+		@apply w-full  text-center text-3xl rounded-full  bg-gray-100 py-4 mb-4
 	}
 
 	

@@ -347,7 +347,7 @@ export default function Home() {
 								<div className='lg:w-full w-3/5 px-6 '>
 								{row.inD==false
 								?
-									<h1 className='grd-msg bg-[#F0090B] text-white'>Not Eligible</h1>
+									<h1 className='grd-msg bg-[#F0090B] text-white rounded-xl md:rounded-full'>Not Eligible</h1>
 								:
 									<div>
 										{row.C==false?
@@ -366,7 +366,7 @@ export default function Home() {
 								}
 							</div>
 								:
-								<div className='w-3/5 sm:w-2/5 lg:w-full px-6 '>
+								<div className='w-3/5 sm:w-2/5 lg:w-full px-1 sm:px-6 '>
 									<h1 className='grd-msg'> TBD</h1>
 								</div>
 								}
