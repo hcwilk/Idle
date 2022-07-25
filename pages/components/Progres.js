@@ -101,7 +101,7 @@ export default function Progress({which, setWhich, checked, init, setText, setSh
 			
 			if(checking!=='undefined'){
 
-				only = checking.filter(({from}) => '0x604daff14510938570cdce39285de66eca68dbd4' ===from);
+				only = checking.filter(({from}) => signer.provider.provider.selectedAddress ===from);
 			}
 			else{
 				only = []
@@ -228,7 +228,6 @@ export default function Progress({which, setWhich, checked, init, setText, setSh
 					<h1 className="prg-title">Step 3: Claim $WAIT</h1>
 					<div className="prg-but-no flex justify-center items-center">MINT ALL</div>
 				</div>	
-				<button onClick={() => {handleClick('0x604DaFf14510938570cDCe39285DE66eCA68dbD4')}}>fdsfasd</button>		
 			</div>
 			}
 		   
