@@ -38,7 +38,7 @@ export default function Modal({showModal, setShowModal, colorTheme, text, title}
 						</div>
 						<>
 						
-						{title=="Feel like you've already unlocked your $WAIT?" || title=="Looks like you haven't unlocked your $WAIT yet!" || title=="WalletConnect"?
+						{title=="Feel like you've already unlocked your $WAIT?" || title=="Looks like you haven't unlocked your $WAIT yet!" || title=="WalletConnect" ||title=="Insufficient funds for transaction!"?
 						<div className="flex justify-end">
 							<button onClick={()=> {setShowModal(false)}} className="bg-[#252E3F] text-white h-10 w-20 rounded-2xl">Close</button>
 						</div>

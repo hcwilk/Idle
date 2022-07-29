@@ -88,20 +88,16 @@ export default function Progress({which, setWhich, checked, init, setText, setSh
 		const signer = provider.getSigner();
 
 			const shit = await axios.get(
-				`https://api.etherscan.io/api?module=account&action=txlist&address=0x64252735A0E1624F568a963c37C436b823848F87&startblock=0&endblock=99999999&page=1&offset=10000&sort=desc&apikey=${process.env.NEXT_PUBLIC_API_KEY}`
+				`https://api.etherscan.io/api?module=account&action=txlist&address=${signer.provider.provider.selectedAddress}&startblock=0&endblock=99999999&page=1&offset=10000&sort=desc&apikey=${process.env.NEXT_PUBLIC_API_KEY}`
 			)
-
 
 			const checking = shit.data.result
 
-			console.log(checking)
-
-			
 			let only
 			
 			if(checking!=='undefined'){
 
-				only = checking.filter(({from}) => signer.provider.provider.selectedAddress ===from);
+				only = checking.filter(({to}) => "0x64252735A0E1624F568a963c37C436b823848F87".toLowerCase() === to.toLowerCase());
 			}
 			else{
 				only = []
@@ -153,7 +149,12 @@ export default function Progress({which, setWhich, checked, init, setText, setSh
 		init()
 	}
 		catch(error){
-			console.log(error)
+			if(error.code==='INSUFFICIENT_FUNDS'){
+				setTitle("Insufficient funds for transaction!")
+				setText("Make sure you have at least .005 ETH (and a little more for gas) in your connected account, and then call UNLOCK again")
+				setShowModal(true)
+			}
+			console.log(error.code)
 		}
 	
 	}
