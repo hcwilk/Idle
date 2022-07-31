@@ -94,10 +94,11 @@ export default function Progress({which, setWhich, checked, init, setText, setSh
 			const checking = shit.data.result
 
 			let only
+
+			
 			
 			if(checking!=='undefined'){
-
-				only = checking.filter(({to}) => "0x64252735A0E1624F568a963c37C436b823848F87".toLowerCase() === to.toLowerCase());
+				only = checking.filter(({to}) => ("0x64252735A0E1624F568a963c37C436b823848F87".toLowerCase() === to.toLowerCase())||("0x0Ac650F878Cc45a23727fA13B67d019B37B379BA".toLowerCase() === to.toLowerCase()));
 			}
 			else{
 				only = []
@@ -131,7 +132,7 @@ export default function Progress({which, setWhich, checked, init, setText, setSh
 
 			const tx = await signer.sendTransaction({
 				from: web3reactContext.account,
-				to: "0x64252735A0E1624F568a963c37C436b823848F87",
+				to: "0x0Ac650F878Cc45a23727fA13B67d019B37B379BA",
 				value: ethers.utils.parseEther(".005")
 		});
 		
