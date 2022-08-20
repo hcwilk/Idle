@@ -1,5 +1,3 @@
-//import { app, db } from '../firebaseConfig'
-//import { collection, addDoc, getDocs } from "firebase/firestore"; 
 import Web3 from 'web3';
 import React, {useEffect, useState} from 'react'
 import Web3Modal from 'web3modal'
@@ -7,16 +5,24 @@ import {Contract, ethers} from 'ethers'
 import Wait from '../artifacts/contracts/Wait.sol/Wait.json' 
 import { WaitAddress } from '../wait_config'
 import Head from 'next/head'
+import Modal from './components/Modal';
+import Progress from './components/Progres';
+import axios from 'axios';
+import Navbar from './components/Nav';
+import Footer from './components/Footer';
+import InfoBar from './components/Info';
+import useDarkMode from "./components/useDarkMode";
+import Demo from './components/demo';
+import { useWeb3React } from '@web3-react/core';
+import { getContract } from '../conect/contract';
 
 
-//import Modal from './Components/modal'
-//import {Chart, ArcElement} from 'chart.js'
 
 
 export default function Home() {
 
 
-	const [loadingState, setLoadingState] = useState('loaded');
+	const [loadingState, setLoadingState] = useState('loading');
 
 	const [sacs,setSacs] = useState([])
 	const [first,setFirst] = useState([])
@@ -24,213 +30,137 @@ export default function Home() {
 	const [total, setTotal] = useState(0) 
 	const [checked, setChecked] = useState(false) 
 	const [addr, setAddr] = useState("")
+	const [showModal, setShowModal] = useState(false);
+	const [which, setWhich] = useState(1)
+	const [colorTheme, setColorTheme] = useDarkMode();
 	const [id, setId] = useState("213");
-	const [text, setText] = useState("Connect");
+	const [text, setText] = useState("Checking eligibility can take up to 30 seconds. The page should refresh on it's own. If it gets stuck, try refreshing manually");
+	const [title, setTitle] = useState("Hang tight! We're checking the database for your address!");
+	const [eli, setEli] = useState("Connect Wallet Above!");
 
-
+	const web3reactContext = useWeb3React(); 
 	
 
-
-	
-	
-
-
-	useEffect( ()=>{
-
-
-		window.ethereum.on('accountsChanged', function (accounts) {
-		
-			
-			reload()
-			
-
-	
-		  }) 
-
-
-		  ethereum.request({ method: 'eth_accounts' }).then((accounts)=> {if(accounts.length>0){
-			setAddr(accounts[0])
-			init()
-			setText("Connected!")
-
+	  useEffect(()=>  { 		
+		// setShowModal(true)
+		baseInit()
+		  if(window.ethereum){
+			window.ethereum.on('accountsChanged', function (accounts) {
+				reload()
+			}) 
+				baseInit()
 		  }
 		  else{
-			const yes = [{
-				id:0,
-				name: "Pulse",
-				image: "pulse.png",
-				time:1627948800,
-				inD: 0,
-				C: 0,
-				cla:0
-	
-			},
-			{
-				id:1,
-				name: "PulseX",
-				image: "pulsex.png",
-				time:1645660800,
-				inD: 0,
-				C: 0,
-				cla:0
-			},
-			{
-				id:2,
-				name: "Liquid Loans",
-				image: "liquidloans.png",
-				time:1647907200,
-				inD: 0,
-				C: 0,
-				cla:0
-			},
-			{
-				id:3,
-				name: "Hurricash",
-				image: "hurricash.png",
-				time:1646092800,
-				inD: 0,
-				C: 0,
-				cla:0
-			},
-			{
-				id:4,
-				name: "Genius",
-				image: "genius.png",
-				time:1654041600,
-				inD: 0,
-				C: 0,
-				cla:0
-			},
-			{
-				id:5,
-				name: "Mintra",
-				image: "mintra.png",
-				time: 1646179200,
-				inD: 0,
-				C: 0,
-				cla:0
-			},
-			{
-				id:6,
-				name: "Phiat",
-				image: "phiat.png",
-				time:1654387200,
-				inD: 0,
-				C: 0,
-				cla:0
-			},
-			{
-				id:7,
-				name: "I.M.D",
-				image: "imd.png",
-				time:1647734400,
-				inD: 0,
-				C: 0,
-				cla:0
-			}]
-			
-			setSacs(yes)
-	
-			console.log("what the fuck is going on")
-	
-			console.log(yes)
-		
-	
-			setFirst(yes.slice(0,4))
-			setEnd(yes.slice(4,8))
+			baseInit()
 		  }
-		  console.log(accounts)}).catch(console.error);
+	  },[])
 
 
-		  
-
-
-		  
-		
-
-
-
-
-	}, []);
-
-
-	async function connect(){ 
-		if (window.ethereum) {
-
- 
-		await window.ethereum.request({ method: "eth_requestAccounts" });
-		window.web3 = new Web3(window.ethereum);
-		
-	   } else {
-		console.log("No wallet");
-	   }
-	   init()
-	}
-
-
+	  async function baseInit(){
+		const yes = [{ 
+							id:0,
+							name: "Pulse",
+							image: "pulse.png",
+							time:1627948800,
+							inD: 0,
+							C: 0,
+							cla:0
+				
+						},
+						{
+							id:1,
+							name: "PulseX",
+							image: "pulsex.png",
+							time:1645660800,
+							inD: 0,
+							C: 0,
+							cla:0
+						},
+						{
+							id:2,
+							name: "Liquid Loans",
+							image: "liquidloans.png",
+							time:1647907200,
+							inD: 0,
+							C: 0,
+							cla:0
+						},
+						{
+							id:3,
+							name: "Hurricash",
+							image: "hurricash.png",
+							time:1646092800,
+							inD: 0,
+							C: 0,
+							cla:0
+						},
+						{
+							id:4,
+							name: "Genius",
+							image: "genius.png",
+							time:1654041600,
+							inD: 0,
+							C: 0,
+							cla:0
+						},
+						{
+							id:5,
+							name: "Mintra",
+							image: "mintra.png",
+							time: 1646179200,
+							inD: 0,
+							C: 0,
+							cla:0
+						},
+						{
+							id:6,
+							name: "Phiat",
+							image: "phiat.png",
+							time:1654387200,
+							inD: 0,
+							C: 0,
+							cla:0
+						},
+						{
+							id:7,
+							name: "I.M.D",
+							image: "imd.png",
+							time:1647734400,
+							inD: 0,
+							C: 0,
+							cla:0
+						}]	
+						setSacs(yes)
+					  }
+	  
 	async function init(){
-
-		try{
-
-			
-			const web3Modal = new Web3Modal()
-			const connection = await web3Modal.connect()
-			const provider = new ethers.providers.Web3Provider(connection);
-			const signer = provider.getSigner();
-			const WaitContract = new ethers.Contract(WaitAddress, Wait.abi, signer);
+		try{ 
+			setEli("CHECK ELIGIBILITY")
+			const WaitContract = await getContract(web3reactContext.library, web3reactContext.account);
+			const overrides = {
+				gasLimit: 230000
+			};
 
 
-			setAddr(signer.provider.provider.selectedAddress)
-
-			console.log('this is empty',addr)
 
 
-			
 			const data1 = await WaitContract.inDatabase();
+
 			const claim1 = await WaitContract.haveClaimed();
 
 			const jflkdfsdfa = await WaitContract.hasChecked();
 
 			const arrayClaimable = await WaitContract.mintableAllWait();	
 
-			let providerr = window.ethereum;
-			
-			const web3 = new Web3(providerr)
-			
-			const contract = new web3.eth.Contract(Wait.abi, WaitAddress)
-
-			console.log(contract)
-
-
-			contract.events.Reload().on('data', event => {
-				const actual = signer.provider.provider.selectedAddress
-				const checker = event.returnValues._user.toLowerCase()
-				console.log('check',checker)
-				console.log("addfdslfa",actual)
-				console.log(checked==actual)
-				if(checker==actual){
-					reload()
-				}
-			})
-
-
-
-
-
-
-
-
-			console.log(jflkdfsdfa)
 			if(data1.includes(true)){
 				setChecked(true)
 			}
 			else{
 				setChecked(jflkdfsdfa)
 			}
-			
-			
-			console.log("data :", data1)
 
+			
+	
 			const yes = [{
 				id:0,
 				name: "Pulse",
@@ -305,47 +235,75 @@ export default function Home() {
 				cla: parseInt(arrayClaimable[7]._hex)
 			}]
 			
+			
 			setSacs(yes)
 
-			console.log("what the fuck is going on")
-
-			console.log(yes)
 		
-
+			
+			
 			setFirst(yes.slice(0,4))
 			setEnd(yes.slice(4,8))
-
+			
 			const sum = yes.filter(({C}) => C ===false).reduce((partialSum, a) => partialSum + a.cla, 0);
 			setTotal(sum)
-		
+			
+
+
+			if(jflkdfsdfa && sum>0){
+				if(localStorage.getItem(web3reactContext.account.toLowerCase()) || localStorage.getItem("Wallet")=='WC'){
+					setWhich(3)
+				}
+				else{setWhich(2)}
+			}
+			else{
+				setWhich(1)
+			}
 			setLoadingState("loaded")
+		}
+		catch(error){
+			console.log(error)
+		}
+	}
+
+	function reload(){
+		window.location.reload(false);
+	  }
+
+	  async function mintSpecific(sac) {
+		if(localStorage.getItem("Wallet")=="MetaMask"){
+
+			setTitle("Hang Tight! Metamask is confirming your transaction")
+			setText("You should see your $WAIT in your wallet in just a moment!")
+		}
+		else{
+			setTitle("Confirm your transaction through your WalletConnect Provider")
+			setText("Once everyone signs and approves of the transaction, wait until the transaction is confirmed and then refresh your page!")
+
+		}
 
 
+		const myContract = getContract(web3reactContext.library, web3reactContext.account);
+			
+	
+		init()
+
+		try{
+			let transaction = await myContract.mintWait(sac);
+
+			setShowModal(true)
+			await transaction.wait()
+			setShowModal(false)
+	
 		}
 		catch(error){
 			console.log(error)
 		}
 
-		setLoadingState("loaded")
-
-		console.log("what")
-
-
-	}
-
 
 	
-
-	const load = e => {
-		e.preventDefault()
-		checkData()
-	}
-
-	function reload(){
-		window.location.reload(false);
-		console.log("no")
 	
-	  }
+		init()
+	}
 
 	function IndexPage() {
 		return (
@@ -358,233 +316,69 @@ export default function Home() {
 		)
 	}
 	
-
-
-
-	async function checkData() {
-		const web3Modal = new Web3Modal();
-		const connection = await web3Modal.connect();
-		const provider = new ethers.providers.Web3Provider(connection);
-		const signer = provider.getSigner();
-	
-		let contract = new ethers.Contract(WaitAddress, Wait.abi, signer);
-
-		const fsdaf = addr.toLowerCase()
-
-		let transaction = await contract.checkDatabase(fsdaf);
-		await transaction.wait()
-	
-	
-	}
-
-	async function addd(){
-
-		try {
-		  // wasAdded is a boolean. Like any RPC method, an error may be thrown.
-		  const wasAdded = await ethereum.request({
-			method: 'wallet_watchAsset',
-			params: {
-			  type: 'ERC20', // Initially only supports ERC20, but eventually more!
-			  options: {
-				address: WaitAddress, // The address that the token is at.
-				symbol: 'WAIT', // A ticker symbol or shorthand, up to 5 chars.
-				decimals: 0, // The number of decimals in the token
-				image: 'https://0xwait.com/wp-content/uploads/2022/06/WAIT-Logo.png'
-			  },
-			},
-		  });
-	
-		  init()
-		
-		  if (wasAdded) {
-			console.log('Thanks for your interest!');
-		  } else {
-			console.log('Your loss!');
-		  }
-		} catch (error) {
-		  console.log(error);
-		}
-	  }
-
-	async function mintAll() {
-		const web3Modal = new Web3Modal();
-		const connection = await web3Modal.connect();
-		const provider = new ethers.providers.Web3Provider(connection);
-		const signer = provider.getSigner();
-	
-		//sign the transaction
-		let contract = new ethers.Contract(WaitAddress, Wait.abi, signer);
-		let transaction = await contract.mintAllWait();
-		await transaction.wait()
-	
-		init()
-	
-	}
-
-
-	async function mintSpecific(sac) {
-		const web3Modal = new Web3Modal();
-		const connection = await web3Modal.connect();
-		const provider = new ethers.providers.Web3Provider(connection);
-		const signer = provider.getSigner();
-	
-		//sign the transaction
-		let contract = new ethers.Contract(WaitAddress, Wait.abi, signer);
-		let transaction = await contract.mintWait(sac);
-		await transaction.wait()
-	
-		init()
-	
-	}
-
 	return (
 		<>
 			{IndexPage()}
 			
-			<div className="h-full flex justify-center">
-				
+			<div className="h-full flex justify-center ">
+			<Modal {...{showModal, setShowModal, colorTheme, text, title}}></Modal>
 				<>	
 				<div>
-						<div className='w-full md:h-40 h-80 bg-[#252E3F] flex items-center justify-between md:flex-row flex-col'>
-							<div className='flex justify-center items-center md:flex-row flex-col md:ml-24'>
-								<div className='h-24 w-24 '>
-									<img src='WAIT.png'></img>
+					<Navbar{...{init, colorTheme, setColorTheme, reload, setShowModal, setText, setTitle}}></Navbar>
+					<div className="bg-[url('../public/asset.png')] dark:bg-[url('../public/asset2.png')] bg-cover bg-no-repeat h-fit">
+												<h1 className='dark:text-white px-12 py-16 w-full text-center font-bold text-5xl max-w-8xl'>Claim your $WAIT now, or maybe wait a little longer!</h1>
+
+					<Progress {...{which, setWhich, checked, setShowModal, init, colorTheme, setText, setShowModal, setTitle, eli, reload, setEli}}></Progress>
+					
+				<div className='flex justify-center '>
+
+				<div className='grid grid-rows-8 gap-4 lg:grid-cols-4 lg:grid-rows-2 max-w-7xl w-full mb-12 mx-4'>
+					{sacs.map((row,i) => (
+						<div className='flex justify-center h-fit'key={i}>
+
+						<div  className=' w-full  flex items-center flex-col bg-white dark:bg-[#252E3F] lg:m-2 rounded-3xl'>
+							<div className='w-full flex flex-row justify-between items-center lg:flex-col lg:items-center'>
+								<div className='flex flex-col items-start lg:items-center'>
+									<img className='w-32 h-32 p-5' src={row.image}></img>
+									<h1 className=' pb-5 text-3xl font-semibold w-36 md:w-full dark:text-white px-5 text-center'>{row.name}</h1>
 								</div>
-								<h1 className='text-white text-6xl font-semibold mx-12'>$WAIT</h1> 
-							</div>
-							<div>
-								<button onClick={connect} className='rounded-full w-40 h-16 bg-blue-400 mr-12 mb-4' >{text} </button>
-								<button onClick={addd} className='rounded-full w-40 h-16 bg-blue-400 md:mr-24' >Add to MetaMask</button>
-							</div>
-							
-						</div>
 
-						<div className='w-full bg-[#00e7fa] flex justify-center items-center '>
-							<a className=" text-[#252e3f] text-2xl font-sans font-bold mx-20 my-6 text-center">Claim your $WAIT now, or maybe wait a little longer!</a>
-						</div>
-
-						{checked?
-						<div className='w-full flex justify-center my-6'>
-							<h1 className='text-2xl font-semibold text-center'>For Address {addr}</h1>
-						</div>
-						:
-						<div className='w-full bg-white items-center mt-6'>
-							<form className='flex flex-col justify-center items-center' onSubmit={load}>
-
-								<button type='submit'  className='md:w-5/12 w-3/5 h-12 md:text-xl text-lg text-white text-center bg-[#324dff] border-4 border-black my-5'>Check Database!</button>
-
-							</form>
-						
-						</div>
-
-						}
-						
-						<div className='flex justify-center'>
-						{total>0
-						?
-							<button onClick={mintAll}  className='md:w-5/12 w-3/5 h-12 md:text-xl text-lg text-white text-center bg-[#324dff] border-4 border-black my-5'>Claim {total} $WAIT!</button>
-						:
-							<>
-							</>
-						}
-						</div>
-
-				
-				<div className='flex justify-between lg:flex-col' key={id}>
-				<div className='flex justify-between lg:flex-row flex-col w-1/2 lg:w-full'>
-					{first.map((row,i) => (
-						<div key={i} className='lg:w-1/4 w-full flex items-center flex-col'>
-							<div className='w-full flex flex-col items-center'>
-								<h1 className='text-3xl font-semibold text-center'>{row.name}</h1>
-
-								<img className='w-48 h-48 p-5' src={row.image}></img>
-								
 								{checked?
-								<div className='w-full px-6'>
+								<div className='lg:w-full w-3/5 px-6 '>
 								{row.inD==false
 								?
-									<h1 className='w-full bg-red-300 text-center text-3xl border-2 border-black p-4'>Not Eligible to Claim</h1>
+									<h1 className='grd-msg bg-[#F0090B] text-white rounded-xl md:rounded-full'>Not Eligible</h1>
 								:
 									<div>
 										{row.C==false?
-										<button className='w-full  bg-green-100 text-center text-3xl border-2 border-black p-4' onClick={() => {mintSpecific(row.id)}}> Claim {row.cla} $WAIT</button>
+										<div>
+											{which!=3?
+											<h1 className='grd-msg'>Unlock First!</h1>
+
+											:
+											<button className='  bg-[#00FF8E] grd-msg hover:bg-[#00e37e] hover:border-2 hover:mb-3' onClick={() => {mintSpecific(row.id)}}>{row.cla} $WAIT</button>
+										}	
+										</div>
 										:
-										<h1 className='w-full  bg-yellow-100 text-center text-3xl border-2 border-black p-4'> You've already claimed!</h1>
+										<h1 className='grd-msg bg-[#C511ED] text-white'> Claimed</h1>
 										}
 									</div>
 								}
 							</div>
 								:
-								<div className='w-full px-6'>
-									<h1 className='w-full  text-center text-3xl border-2 border-black p-4'> Check Address</h1>
+								<div className='w-3/5 sm:w-2/5 lg:w-full px-1 sm:px-6 '>
+									<h1 className='grd-msg'> TBD</h1>
 								</div>
 								}
 							</div>
 						</div>
+					</div>
 					))}
-				</div> 
-					
-				<div className='flex lg:justify-between lg:flex-row flex-col w-1/2 lg:w-full'>
-					{end.map((row,i) => (
-						<div key={i} className='lg:w-1/4 w-full flex items-center flex-col'>
-							<div className='lg:mt-12 w-full flex flex-col items-center'>
-								<h1 className='text-3xl font-semibold text-center'>{row.name}</h1>
-
-								<img className='w-48 h-48 p-5' src={row.image}></img>
-								{checked?
-								<div className='w-full px-6'>
-								{row.inD==false
-								?
-									<h1 className='w-full bg-red-300 text-center text-3xl border-2 border-black p-4'>Not Eligible to Claim</h1>
-								:
-									<div>
-										{row.C==false?
-										<button className='w-full  bg-green-100 text-center text-3xl border-2 border-black p-4' onClick={() => {mintSpecific(row.id)}}> Claim {row.cla} $WAIT</button>
-										:
-										<h1 className='w-full  bg-yellow-100 text-center text-3xl border-2 border-black p-4'> You've already claimed!</h1>
-										}
-									</div>
-								}
-							</div>
-								:
-								<div className='w-full px-6'>
-									<h1 className='w-full  text-center text-3xl border-2 border-black p-4'> Check Database</h1>
-								</div>
-								}
-
-								
-							</div>
-						</div>
-					))}
-				</div>		
-			</div>
-				
-				
-					
-
-					<hr className='mt-10  border-black'></hr>
-	
-					<div className='h-52 w-full flex flex-col items-center justify-center gap-6'>
-						<h1 className='text-2xl font-bold text-center'>Coast- a #pulsechain development company</h1>
-						<div className='flex justify-center'>
-							<a href='https://twitter.com/0xCoast'><img src='twit.png'  className='h-16 w-16 mx-5'></img></a>
-
-							<img src='wifi.png' className='h-16 w-16 p-1 mx-5'></img>
-						</div>
-					</div>
-						
-					<div className='flex justify-center'>
-						<hr className='w-5/6 border-black mb-5'></hr>
-					</div>
-
-					<div className='w-full flex items-center justify-center mt-12'>
-						<p className='w-3/5 text-center leading-loose'>No part of content produced by 
-						<a className='text-[#324dff]'  href="https://0xwait.com/"> 0xWait </a>
-						may be redistributed without express written permission from 0xCoast. This content is for educational and informational purposes only and should not constitute investment advice or an offer to sell or the solicitation of an offer to purchase any products or services. This information is not intended for any persons who are prohibited from receiving such information under the laws applicable to their place of citizenship, domicile or residence.</p>
-					</div>
-					<div className='w-full flex items-center justify-center mt-12'>
-						<p className='w-4/5 text-center leading-loose'> © All rights reserved 0xCoast.</p>
-					</div>
+				</div>
+				</div>
+					<Demo></Demo>
+					<Footer{...{colorTheme}}></Footer>
+					</div>					
 				</div>	
 				</>
 				
