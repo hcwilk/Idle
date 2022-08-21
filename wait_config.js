@@ -1,2 +1,3 @@
-export const WaitAddress = '0xb5588C411ba0bb7D38865fdC51D082d004e519F7'
+export const IdleAddress = '0x6E3C57228136785713aCc2b770744Bd3bB16CAd0'
+
 

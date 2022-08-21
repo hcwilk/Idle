@@ -6,15 +6,8 @@
 const hre = require("hardhat");
 
 async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
 
-  // We get the contract to deploy
-  const Wait = await hre.ethers.getContractFactory("Wait");
+  const Wait = await hre.ethers.getContractFactory("Idle");
   const wait = await Wait.deploy();
 
   await wait.deployed();
@@ -38,7 +31,5 @@ main()
 
   //npx hardhat run --network PulseChain scripts/deploy.js 
 
-  // Gabriel if you were trying to run this ^^ script and it wouldn't work you are a dumbass because that's 
-  // Pulsechain. Fuck you. Love, Cole
 
   // npx hardhat run --network rinkeby scripts/deploy.js 
