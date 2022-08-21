@@ -89,9 +89,9 @@ export default function Navbar({colorTheme, setColorTheme})  {
 							ICON
 							{/* <img src='Spin.gif'></img> */}
 						</div>
-						<h1 className=' text-6xl font-semibold mr-12 ml-6 my-6 dark:text-white'>IDLE</h1> 
-						<h3 className="mx-6 dark:text-white text-lg"> Game #1</h3>
-						<h3 className="mx-6 dark:text-white text-lg"> All Games</h3>
+						<h1 className='text-white  text-3xl font-semibold mr-12 ml-6 my-6 dark:text-white'>IDLE</h1> 
+						<h3 className="text-white mx-6 dark:text-white text-lg"> Game #1</h3>
+						<h3 className="text-white mx-6 dark:text-white text-lg"> All Games</h3>
 					</div>
 					<div className=' flex flex-col md:flex-row gap-6 items-center md:justify-between w-2/5 md:mr-6'>
 						<Wallet></Wallet>
