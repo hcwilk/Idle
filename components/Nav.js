@@ -47,9 +47,9 @@ export default function Navbar({colorTheme, setColorTheme})  {
 			  type: 'ERC20', // Initially only supports ERC20, but eventually more!
 			  options: {
 				address: IdleAddress, // The address that the token is at.
-				symbol: 'WAIT', // A ticker symbol or shorthand, up to 5 chars.
+				symbol: 'IDL', // A ticker symbol or shorthand, up to 5 chars.
 				decimals: 0, // The number of decimals in the token
-				image: 'https://0xwait.com/wp-content/uploads/2022/06/WAIT-Logo.png'
+				
 			  },
 			},
 		  });
@@ -57,9 +57,6 @@ export default function Navbar({colorTheme, setColorTheme})  {
  
 		  const web3Modal = new Web3Modal()
 			// init(web3Modal)
-	
-		  
-		
 		  if (wasAdded) {
 			console.log('Thanks for your interest!');
 		  } else {
@@ -68,9 +65,6 @@ export default function Navbar({colorTheme, setColorTheme})  {
 		} catch (error) {
 		  console.log(error);
 		}
-
-
-		
 	  }
 
 	 
@@ -82,8 +76,8 @@ export default function Navbar({colorTheme, setColorTheme})  {
 
 	
 		return (
-			<div className="flex justify-center bg-[#5091fa] dark:bg-[#421587]">
-				<div className='w-full max-w-7xl md:h-32 h-fit  flex items-center justify-between md:flex-row flex-col bg-[#5091fa] dark:bg-[#421587]'>
+			<div className="flex justify-center bg-[#55AAFF] dark:bg-[#4808AA]">
+				<div className='w-full max-w-7xl md:h-32 h-fit  flex items-center justify-between md:flex-row flex-col bg-[#55AAFF] dark:bg-[#4808AA]'>
 					<div className='flex justify-center items-center md:flex-row flex-col md:ml-6'>
 						<div className='h-24 w-24 mt-6 md:mt-0 flex justify-center items-center text-4xl font-bold bg-blue-100 rounded-full'>
 							ICON
@@ -96,14 +90,9 @@ export default function Navbar({colorTheme, setColorTheme})  {
 					<div className=' flex flex-col md:flex-row gap-6 items-center md:justify-between w-2/5 md:mr-6'>
 						<Wallet></Wallet>
 						<button onClick={addd} className='btn-nav hover:border-2' ><div className='w-3/5'>Add to MetaMask</div></button>
-					
 						<div className='mb-6 md:mb-0'>
-
 							<button className="bg-[url('../public/light.png')] dark:bg-[url('../public/dark.png')] bg-no-repeat bg-contain w-16 h-16 md:mt-8" onClick={toggleColor}></button>
-
-						
-						
-							</div>
+						</div>
 					</div>
 					
 				</div>
